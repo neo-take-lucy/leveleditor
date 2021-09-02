@@ -56,7 +56,7 @@ public class Launcher {
         mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
         mainWindow.setVisible(true);
 
-        Loader.loadOverride("saves/LVL1.map", terminalHandler);
+        Loader.loadOverride("source/core/assets/configs/rags/LVL1.map", terminalHandler);
 
         //terminalHandler.parseString("-place [10,10] (wall)");
         //CommandService.executeNext();
