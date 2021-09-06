@@ -66,6 +66,8 @@ public class TerminalHandler {
 
         validCommands.put("clear", 1);      //clear
 
+        validCommands.put("@player", 3);    //@player [command] [command argument]
+
         //TODO: save filename : with restrictions, saves to working dir of ragnarok racer
         //TODO: load filename : loads file from filename
         //TODO: new : with parameters -> make new file return false if
@@ -201,11 +203,43 @@ public class TerminalHandler {
             Loader.loadOverride(split[1], this);
             graphicTo.requestRedraw();
         } else if (split[0].equals("clear")) {
-            drawTo.initLayers();
-            graphicTo.requestRedraw();
+            parseClear();
+        } else if (split[0].equals("new")) {
+            parseNew(split);
+        } else if (split[0].equals("@player")) {
+            parseAtPlayer(split);
         }
 
+        graphicTo.requestRedraw();
+
     }
+
+    private void parseNew(String[] input) {
+
+        try {
+
+            String title = input[1];
+
+            String coOrds = input[2].replace("[", "").replace("]", "");
+            String[] cSplit = coOrds.split(",");
+
+            int width = Integer.parseInt(cSplit[0]);
+            int height = Integer.parseInt(cSplit[1]);
+
+            drawTo.makeNew(title, width, height);
+
+        } catch (Exception e) {
+            System.err.printf("parseNew could not parse. Check width and height commands are integers\n");
+        }
+
+        graphicTo.requestRedraw();
+    }
+
+    private void parseClear() {
+        drawTo.initLayers();
+        graphicTo.requestRedraw();
+    }
+
 
     private MacroCommand parsePlace(String[] split) {
         MacroCommand macro = new MacroCommand(drawTo);
@@ -214,6 +248,7 @@ public class TerminalHandler {
     }
 
     private Command singlePlace(String[] split) {
+
         split[1] = split[1].replace("[", "");
         split[1] = split[1].replace("]", "");
 
@@ -236,12 +271,10 @@ public class TerminalHandler {
         CompType compType = stringToValueEnum.get(split[2]);
         Layer layer;
         switch (compType) {
-            case NULL:
-                layer = Layer.TERRAIN;
-            case WALL:
-                layer = Layer.TERRAIN;
-            case FLOOR:
-                layer = Layer.TERRAIN;
+            case SKELETON:
+            case WOLF:
+                layer = Layer.ACTIVE;
+                break;
             default:
                 layer = Layer.TERRAIN;
         }
@@ -345,6 +378,33 @@ public class TerminalHandler {
 
     private void parseBrush(String brushSetting) {
         graphicTo.putBrushFromTerm(brushSetting);
+    }
+
+    private void parseAtPlayer(String[] split) {
+
+        System.out.println("parse player");
+
+        String command = split[1];
+
+        int x = 5;
+        int y = 5;
+
+        String[] coOrds = split[2].replace("[", "").replace("]", "").split(",");
+        try {
+
+            x = Integer.parseInt(coOrds[0]);
+            y = Integer.parseInt(coOrds[1]);
+
+        } catch (Exception e) {
+
+        }
+
+        switch (command) {
+            case "set":
+                drawTo.setPlayerLocation(x, y);
+                break;
+        }
+
     }
 
 }

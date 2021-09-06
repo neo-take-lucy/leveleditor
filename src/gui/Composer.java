@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class Composer extends JComponent {
 
@@ -70,6 +71,7 @@ public class Composer extends JComponent {
 
         if(!painting.isOpen()) {
             CompType[][] terrainLayer = painting.getTerrainLayer();
+            Hashtable<String, CompType> activeSet = painting.getActiveSet();
 
             int x = 0;
             for (CompType[] column : terrainLayer) {
@@ -87,6 +89,30 @@ public class Composer extends JComponent {
                 }
                 x++;
             }
+
+            for (String coOrd : activeSet.keySet()) {
+
+                String trimmedCoOrd = coOrd.replace("[","").replace("]","");
+                String[] split = trimmedCoOrd.split(",");
+                int ax = Integer.parseInt(split[0]);
+                int ay = Integer.parseInt(split[1]);
+
+                g.setColor(activeSet.get(coOrd).getColor());
+
+                g.fillRect(ax * P_SCALE + halfEmb - OFFSET_HOZ,
+                        ay * P_SCALE + halfEmb - OFFSET_VERT,
+                        P_SCALE, P_SCALE);
+
+            }
+
+            g.setColor(CompType.PLAYER.getColor());
+
+            int px = painting.getPlayer()[0];
+            int py = painting.getPlayer()[1];
+
+            g.fillRect(px * P_SCALE + halfEmb - OFFSET_HOZ,
+                    py * P_SCALE + halfEmb - OFFSET_VERT,
+                    P_SCALE, P_SCALE);
         }
     }
 

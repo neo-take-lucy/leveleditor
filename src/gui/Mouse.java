@@ -73,8 +73,14 @@ public class Mouse implements MouseListener, MouseMotionListener {
         int gridX = gui.getGridAt(e.getX(), e.getY())[0];
         int gridY = gui.getGridAt(e.getX(), e.getY())[1];
 
-        terminal.parseString(String.format("-place [%d,%d] %s", gridX, gridY,
-                gui.currentBrushSetting));
+        //System.out.println(gui.currentBrushSetting);
+
+        if (gui.currentBrushSetting.equals("(player)")) {
+            terminal.parseString(String.format("@player set [%d,%d]", gridX, gridY));
+        } else {
+            terminal.parseString(String.format("-place [%d,%d] %s", gridX, gridY,
+                    gui.currentBrushSetting));
+        }
 
     }
 

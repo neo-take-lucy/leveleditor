@@ -2,11 +2,14 @@ package composition;
 
 import gui.Composer;
 
+import java.util.Hashtable;
+
 public class Composition {
 
     private CompType[][] terrainLayer;
-    private CompType[][] activeLayer;
+    private Hashtable<String, CompType> activeSet;
 
+    private String title;
     private int width;
     private int height;
 
@@ -34,20 +37,31 @@ public class Composition {
         this.width = initWidth;
         this.height = initHeight;
 
+        this.playerLocation = new int[]{2, height - 2};
+
         initLayers();
 
     }
 
+    public void makeNew(String title, int width, int height) {
+        this.title = title;
+        this.width = width;
+        this.height = height;
+
+        this.playerLocation = new int[]{2, 1};
+
+        initLayers();
+    }
+
     public void initLayers() {
         terrainLayer = new CompType[width][height];
-        activeLayer = new CompType[width][height];
+        activeSet = new Hashtable<>();
 
         isOpen = false;
 
         for(int tx = 0; tx < width; tx++) {
             for(int ty = 0; ty < height; ty++) {
                 terrainLayer[tx][ty] = CompType.NULL;
-                activeLayer[tx][ty] = CompType.NULL;
             }
         }
     }
@@ -101,7 +115,8 @@ public class Composition {
         if(isOpen && inBounds) {
             switch(layer) {
                 case ACTIVE:
-                    activeLayer[x][y] = value;
+                    String stringCoOrd = String.format("[%d,%d]", x, y);
+                    activeSet.put(stringCoOrd, value);
                     break;
                 case TERRAIN:
                     terrainLayer[x][y] = value;
@@ -131,7 +146,8 @@ public class Composition {
         if(!isOpen) {
             switch(layer) {
                 case ACTIVE:
-                    return activeLayer[x][y];
+                    String stringCoOrd = String.format("[%d,%d]", x, y);
+                    return activeSet.get(stringCoOrd);
                 case TERRAIN:
                     return terrainLayer[x][y];
             }
@@ -160,14 +176,35 @@ public class Composition {
      * Returns the active later (for Composer)
      * @return Layer that models "active" entities
      */
-    public CompType[][] getActiveLayer() {
+    public Hashtable<String, CompType> getActiveSet() {
         if(!isOpen) {
-            return activeLayer;
+            return activeSet;
         } else {
             System.err.println("Tried to getActiveLayer w/out Closing");
         }
 
         return null;
+    }
+
+    public void setPlayerLocation(int x, int y) {
+        playerLocation[0] = x;
+        playerLocation[1] = y;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int[] getPlayer() {
+        return playerLocation;
     }
 
     public boolean isOpen() {

@@ -15,10 +15,9 @@ public class Saver {
     private static final String root = "source/core/assets/configs/rags/";
     private static final String fileType = ".rag";
 
-    public static void saveToFilePath(Composition toSave, String name) {
+    public static void oldSaveToFilePath(Composition toSave, String name) {
 
         String file = root + name + fileType;
-
         BufferedWriter writer;
 
         try {
@@ -33,8 +32,7 @@ public class Saver {
 
             CompType[][] terrainLayer = toSave.getTerrainLayer();
             // loop thru all
-
-            CompType[][] activeLayer = toSave.getActiveLayer();
+            Hashtable<String, CompType> activeLayer = toSave.getActiveSet();
             // then for this one, when it's a list of entities, place em
 
             writer = new BufferedWriter(new FileWriter(writingTo));
@@ -43,29 +41,23 @@ public class Saver {
 
             int x = 0;
             for (CompType[] column : terrainLayer) {
-
                 int y = 0;
                 for (CompType toPlace : column) {
-
                     //System.out.printf("x:%dy:%d%s$",x,y,toPlace.toString());
-
                     if (y == fileAsList.size()) {
                         fileAsList.addLast(new StringBuilder(""));
                     }
-
                     Hashtable<CompType, String> toWrite = new Hashtable<>();
-                    toWrite.put(CompType.NULL, " ");
-                    toWrite.put(CompType.WALL, " ");
+                    toWrite.put(CompType.NULL, ".");
+                    toWrite.put(CompType.WALL, ".");
                     toWrite.put(CompType.FLOOR, "F");
                     toWrite.put(CompType.PLATFORM, "P");
                     toWrite.put(CompType.ROCKS, "R");
-                    toWrite.put(CompType.PLAYER, "A");
-                    toWrite.put(CompType.SPIKES, "S");
-                    toWrite.put(CompType.SKELETON, " ");
-
+                    //toWrite.put(CompType.PLAYER, "A");
+                    //toWrite.put(CompType.SPIKES, " ");
+                    //toWrite.put(CompType.SKELETON, " ");
                     String append = toWrite.get(toPlace);
                     fileAsList.get(y).append(append);
-
                     y++;
                 }
                 //System.out.printf("\n");
@@ -88,5 +80,80 @@ public class Saver {
             System.err.printf("Problem in writingTo.createNewFile()");
         }
     }
+
+    public static void saveToFilePath(Composition toSave, String name) {
+
+        String file = root + name + fileType;
+        BufferedWriter writer;
+
+        try {
+            File writingTo = new File(file);
+            if (writingTo.createNewFile()) {
+
+                //System.err.printf("Couldn't create new file %s", file);
+
+            } else {
+                // pause program until conflict is resolved
+            }
+
+            String title = toSave.getTitle();
+            int width = toSave.getWidth();
+            int height = toSave.getHeight();
+
+            int playerX = toSave.getPlayer()[0];
+            int playerY = toSave.getPlayer()[1];
+
+            CompType[][] terrainLayer = toSave.getTerrainLayer();
+            Hashtable<String, CompType> activeLayer = toSave.getActiveSet();
+
+            StringBuilder saveFile = new StringBuilder();
+
+            saveFile.append(makeConfig(title, width, height));
+            saveFile.append(makeTerrain(terrainLayer));
+            saveFile.append(atPlayer(playerX, playerY));
+            saveFile.append(listActiveEntities(activeLayer));
+
+            writer = new BufferedWriter(new FileWriter(writingTo));
+
+            writer.append(saveFile.toString());
+
+            writer.close();
+
+        } catch (Exception e) {
+            System.err.printf("Save File %s failed", name);
+        }
+    }
+
+    private static String makeConfig(String title, int width, int height) {
+
+        String appendTitle = String.format("$_%s\n", title);
+        String appendWidth = String.format("$_width %d\n", width);
+        String appendHeight = String.format("$_height %d\n", height);
+
+        return appendTitle + appendWidth + appendHeight + "\n";
+
+    }
+
+    private static String makeTerrain(CompType[][] terrainLayer) {
+
+
+
+        return "";
+
+    }
+
+    private static String atPlayer(int x, int y) {
+
+        return "";
+
+    }
+
+    private static String listActiveEntities(Hashtable<String, CompType> entList) {
+
+        return "";
+
+    }
+
+
 
 }

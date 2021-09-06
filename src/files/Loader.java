@@ -83,9 +83,9 @@ public class Loader {
                             case 'F': //Floor
                                 whatToPlace = "(floor)";
                                 break;
-                            case 'A': //Avatar (player)
+                            /*case 'A': //Avatar (player)
                                 whatToPlace = "(player)";
-                                break;
+                                break;*/
                             case 'S': //Spikes
                                 whatToPlace = "(spikes)";
                                 break;
