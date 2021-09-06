@@ -34,6 +34,8 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
         //before this, send "-macro open" command
 
+        if (gui.currentBrushSetting.equals("(player)")) return;
+
         terminal.parseString("-macro open");
 
         for (String c : coDrag) {

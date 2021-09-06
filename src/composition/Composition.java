@@ -1,5 +1,6 @@
 package composition;
 
+import files.Saver;
 import gui.Composer;
 
 import java.util.Hashtable;
@@ -48,7 +49,7 @@ public class Composition {
         this.width = width;
         this.height = height;
 
-        this.playerLocation = new int[]{2, 1};
+        this.playerLocation = new int[]{2, height - 2};
 
         initLayers();
     }

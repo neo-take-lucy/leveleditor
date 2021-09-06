@@ -45,7 +45,7 @@ public class Composer extends JComponent {
         brushSettings.put("b a", "(player)"); // a for avatar
         brushSettings.put("b v", "(spikes)"); // v look like spike
         brushSettings.put("b r", "(rocks)");
-        brushSettings.put("b w", "(wall)");
+        brushSettings.put("b w", "(wolf)");
         brushSettings.put("b s", "(skeleton)");
 
         currentBrushSetting = brushSettings.get("b n");

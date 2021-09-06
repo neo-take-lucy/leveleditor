@@ -1,0 +1,21 @@
+$_title skeleton
+$_width 10
+$_height 5
+
+$#FFFFF
+$#....P
+$#....P
+$#PP..P
+$#....P
+$#..P.P
+$#..P.P
+$#....P
+$#....P
+$#FFFFF
+
+#@player set [4,3]
+$-spawn [8,3] (skeleton)
+$-spawn [6,1] (skeleton)
+$-spawn [6,3] (skeleton)
+$-spawn [3,0] (skeleton)
+

@@ -101,7 +101,7 @@ public class Saver {
             int height = toSave.getHeight();
 
             int playerX = toSave.getPlayer()[0];
-            int playerY = toSave.getPlayer()[1];
+            int playerY = height - toSave.getPlayer()[1] - 1;
 
             CompType[][] terrainLayer = toSave.getTerrainLayer();
             Hashtable<String, CompType> activeLayer = toSave.getActiveSet();
@@ -111,7 +111,7 @@ public class Saver {
             saveFile.append(makeConfig(title, width, height));
             saveFile.append(makeTerrain(terrainLayer));
             saveFile.append(atPlayer(playerX, playerY));
-            saveFile.append(listActiveEntities(activeLayer));
+            saveFile.append(listActiveEntities(activeLayer, height));
 
             writer = new BufferedWriter(new FileWriter(writingTo));
 
@@ -126,7 +126,7 @@ public class Saver {
 
     private static String makeConfig(String title, int width, int height) {
 
-        String appendTitle = String.format("$_%s\n", title);
+        String appendTitle = String.format("$_title %s\n", title);
         String appendWidth = String.format("$_width %d\n", width);
         String appendHeight = String.format("$_height %d\n", height);
 
@@ -136,24 +136,81 @@ public class Saver {
 
     private static String makeTerrain(CompType[][] terrainLayer) {
 
+        StringBuilder terrainArray = new StringBuilder();
 
+        for (CompType[] column : terrainLayer) {
 
-        return "";
+            StringBuilder colString = new StringBuilder("$#");
+
+            for (CompType terrainAt : column) {
+                switch (terrainAt) {
+
+                    case FLOOR:
+                        colString.append("F");
+                        break;
+                    case ROCKS:
+                        colString.append("R");
+                        break;
+                    case PLATFORM:
+                        colString.append("P");
+                        break;
+                    case SPIKES:
+                        colString.append("S");
+                        break;
+                    case NULL:
+                    default:
+                        colString.append(".");
+                        break;
+                }
+            }
+            colString.append("\n");
+            terrainArray.append(colString);
+        }
+
+        terrainArray.append("\n");
+
+        return terrainArray.toString();
 
     }
 
     private static String atPlayer(int x, int y) {
 
-        return "";
+        return String.format("$@player set [%d,%d]\n\n", x, y);
 
     }
 
-    private static String listActiveEntities(Hashtable<String, CompType> entList) {
+    private static String listActiveEntities(Hashtable<String, CompType> entList, int height) {
 
-        return "";
+        StringBuilder activeEntityList = new StringBuilder();
 
+        for (String coOrd : entList.keySet()) {
+
+            String entityType = "";
+
+            switch (entList.get(coOrd)) {
+                case SKELETON:
+                    entityType = "(skeleton)";
+                    break;
+                case WOLF:
+                    entityType = "(wolf)";
+                    break;
+            }
+
+            //convert current indexing into what RagnarokRacer expects (y = height - y - 1)
+
+            String coOrdTrim = coOrd.replace("[","").replace("]","");
+            int x = Integer.parseInt(coOrdTrim.split(",")[0]);
+            int y = height - Integer.parseInt(coOrdTrim.split(",")[1]) - 1;
+
+            coOrd = String.format("[%d,%d]", x, y);
+
+            String appendTo = String.format("$-spawn %s %s\n", coOrd, entityType);
+            activeEntityList.append(appendTo);
+
+        }
+
+        activeEntityList.append("\n");
+
+        return activeEntityList.toString();
     }
-
-
-
 }

@@ -382,8 +382,6 @@ public class TerminalHandler {
 
     private void parseAtPlayer(String[] split) {
 
-        System.out.println("parse player");
-
         String command = split[1];
 
         int x = 5;

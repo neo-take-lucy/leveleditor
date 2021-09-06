@@ -39,7 +39,7 @@ public class Launcher {
 
         mainCanvas = new Composer();
 
-        mainPaint = new Composition(46, 8);
+        mainPaint = new Composition(1, 1);
         mainCanvas.setComposition(mainPaint);
 
         initCommandService();
@@ -57,7 +57,8 @@ public class Launcher {
         mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
         mainWindow.setVisible(true);
 
-        Loader.loadOverride("LVL1", terminalHandler);
+        terminalHandler.parseString("new default [10,10]");
+        //Loader.loadOverride("LVL1", terminalHandler);
         Saver.saveToFilePath(mainPaint, "test");
 
         //terminalHandler.parseString("-place [10,10] (wall)");
