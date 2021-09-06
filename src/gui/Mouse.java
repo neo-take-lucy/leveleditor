@@ -42,7 +42,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
             StringBuilder placeString = new StringBuilder("-place ");
             placeString.append(c);
-            placeString.append(" ").append(gui.paintSetting);
+            placeString.append(" ").append(gui.currentBrushSetting);
 
             //System.out.println(placeString.toString());
 
@@ -73,7 +73,8 @@ public class Mouse implements MouseListener, MouseMotionListener {
         int gridX = gui.getGridAt(e.getX(), e.getY())[0];
         int gridY = gui.getGridAt(e.getX(), e.getY())[1];
 
-        terminal.parseString(String.format("-place [%d,%d] (wall)", gridX, gridY));
+        terminal.parseString(String.format("-place [%d,%d] %s", gridX, gridY,
+                gui.currentBrushSetting));
 
     }
 

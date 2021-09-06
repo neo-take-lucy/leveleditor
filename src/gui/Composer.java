@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 public class Composer extends JComponent {
 
@@ -25,10 +27,29 @@ public class Composer extends JComponent {
     private Composition painting;
     private Mouse mouse;
 
-    public String paintSetting = "(wall)";
+    public Hashtable<String, String> brushSettings;   // this is consistent should should be more
+                                                        // accessible
+    public String currentBrushSetting;
 
     public Composer() {
         super();
+
+
+        brushSettings = new Hashtable<>();
+
+        // brush setting syntax: bi where i denotes a single character version
+        brushSettings.put("b n", "(null)");        // but fuck it
+        brushSettings.put("b f", "(floor)");
+        brushSettings.put("b p", "(platform)");
+        brushSettings.put("b a", "(player)"); // a for avatar
+        brushSettings.put("b v", "(spikes)"); // v look like spike
+        brushSettings.put("b r", "(rocks)");
+        brushSettings.put("b w", "(wall)");
+        brushSettings.put("b s", "(skeleton)");
+
+        currentBrushSetting = brushSettings.get("b n");
+
+
     }
 
     public void setComposition(Composition grid) {
@@ -103,6 +124,10 @@ public class Composer extends JComponent {
         int gridY = (int) Math.floor((mouseY + OFFSET_VERT - EMBOSS/2.0)/(double)P_SCALE);
 
         return new int[]{gridX, gridY};
+    }
+
+    public void putBrushFromTerm(String fromTerm) {
+        currentBrushSetting = brushSettings.get(fromTerm);
     }
 
 }

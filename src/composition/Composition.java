@@ -33,6 +33,12 @@ public class Composition {
 
         this.width = initWidth;
         this.height = initHeight;
+
+        initLayers();
+
+    }
+
+    public void initLayers() {
         terrainLayer = new CompType[width][height];
         activeLayer = new CompType[width][height];
 

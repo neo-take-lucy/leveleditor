@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ragEdit0a2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ragEdit0a2_jar</output-path>
+    <root id="archive" name="leveleditor.jar">
+      <element id="module-output" name="leveleditor" />
+    </root>
+  </artifact>
+</component>

@@ -10,7 +10,8 @@ public enum CompType {
     ROCKS(Color.red),
     PLAYER(Color.green),
     SPIKES(Color.gray),
-    SKELETON(Color.white);
+    SKELETON(Color.white),
+    WOLF(Color.darkGray);
 
     private Color color;
 

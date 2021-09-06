@@ -20,7 +20,7 @@ public class Loader {
 
         BufferedReader br = null;
         boolean loadSuccessful = false;
-        String pathName = "saves/LVL1.map";
+        String pathName = "saves/LVL1.rag";
 
         try {
             File levelFile = new File(pathName);
@@ -41,7 +41,11 @@ public class Loader {
         }
     }
 
-    public static void loadOverride(String filepath, TerminalHandler writer) {
+    public static void loadOverride(String name, TerminalHandler writer) {
+
+        writer.parseString("clear");
+
+        String filepath = "source/core/assets/configs/rags/" + name + ".rag";
 
         BufferedReader br = null;
         boolean loadSuccessful = false;
@@ -116,13 +120,13 @@ public class Loader {
     }
 
     /*public void loadWorld() throws IOException {
-        // URL url = getClass().getResource("com/deco2800/game/entities/configs/LVL1.map");
+        // URL url = getClass().getResource("com/deco2800/game/entities/configs/LVL1.rag");
         // spawnPlatform(1, LANE_0, 3);
         // spawnPlatform(1, LANE_1, 4);
         // spawnPlatform(1, LANE_2, 5);
 
 
-        File levelFile = new File("saves/LVL1.map");
+        File levelFile = new File("saves/LVL1.rag");
         FileReader fr = new FileReader(levelFile);
         BufferedReader br = new BufferedReader(fr);
         String line;

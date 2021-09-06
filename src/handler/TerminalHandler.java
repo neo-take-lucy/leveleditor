@@ -7,6 +7,8 @@ import command.PlaceCommand;
 import composition.CompType;
 import composition.Composition;
 import composition.Layer;
+import files.Loader;
+import files.Saver;
 import gui.Composer;
 
 import javax.swing.*;
@@ -57,9 +59,23 @@ public class TerminalHandler {
 
         validCommands.put("print", 2);      //print "phrase"
 
+        validCommands.put("b", 2);          //b colour          REM: brush
+
+        validCommands.put("save", 2);       //save filename     REM: more args?
+        validCommands.put("load", 2);       //load filename
+
+        validCommands.put("clear", 1);      //clear
+
+        //TODO: save filename : with restrictions, saves to working dir of ragnarok racer
+        //TODO: load filename : loads file from filename
+        //TODO: new : with parameters -> make new file return false if
+        //TODO: getdir : expose the names of the files
+
     }
 
-    private void makeValidStringToEnum() {
+    private void makeValidStringToEnum() {  // put this and the one in compose together in an enum,
+                                            // store whats needed in smaller version, or just use
+                                            // algoriddim to reference
         stringToValueEnum.put("(null)", CompType.NULL);
         stringToValueEnum.put("(floor)", CompType.FLOOR);
         stringToValueEnum.put("(platform)", CompType.PLATFORM);
@@ -68,6 +84,7 @@ public class TerminalHandler {
         stringToValueEnum.put("(rocks)", CompType.ROCKS);
         stringToValueEnum.put("(wall)", CompType.WALL);
         stringToValueEnum.put("(skeleton)", CompType.SKELETON);
+        stringToValueEnum.put("(wolf)", CompType.WOLF);
     }
 
     public void setComposition(Composition composition) {
@@ -85,7 +102,7 @@ public class TerminalHandler {
         String[] split = input.split(" ");
 
         if(!validCommands.containsKey(split[0])) {
-            System.err.println("Invalid command, try 'help'");
+            System.err.println("Invalid command, try 'help'\n :: rem: not in validCommands");
             return;
         }
 
@@ -176,7 +193,18 @@ public class TerminalHandler {
                 //flaggedMacro = new MacroCommand(drawTo);
             }
             else System.err.println("Invalid Command");
+        } else if (split[0].charAt(0) == 'b') { // SO MAKE SURE NOTHING ELSE IS B
+            parseBrush(input);
+        } else if (split[0].equals("save")) {
+            Saver.saveToFilePath(drawTo, split[1]);
+        } else if (split[0].equals("load")) {
+            Loader.loadOverride(split[1], this);
+            graphicTo.requestRedraw();
+        } else if (split[0].equals("clear")) {
+            drawTo.initLayers();
+            graphicTo.requestRedraw();
         }
+
     }
 
     private MacroCommand parsePlace(String[] split) {
@@ -313,6 +341,10 @@ public class TerminalHandler {
 
     private void parsePrint(String[] split) {
 
+    }
+
+    private void parseBrush(String brushSetting) {
+        graphicTo.putBrushFromTerm(brushSetting);
     }
 
 }
