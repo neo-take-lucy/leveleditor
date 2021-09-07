@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 public class ToolBox extends JPanel {
 
@@ -169,6 +168,10 @@ public class ToolBox extends JPanel {
                 //handler.parseString(e.getActionCommand());
 
                 switch (e.getActionCommand()) {
+                    case ">new":
+                        String newArguments = getNewDialog();
+                        handler.parseString("new " + newArguments);
+                        break;
                     case ">save":
                         //open save dialog
                         String file = getSaveDialog();
@@ -391,6 +394,45 @@ public class ToolBox extends JPanel {
 
         return file;
 
+    }
+
+    private String getNewDialog() {
+
+        JTextField title = new JTextField();
+        JTextField width = new JTextField();
+        JTextField height = new JTextField();
+
+        JComponent[] inputs = {
+                new JLabel("Title:"),
+                title,
+                new JLabel("Width:"),
+                width,
+                new JLabel("Height:"),
+                height,
+        };
+
+        int x = SubSpr.NEW.x;
+        int y = SubSpr.NEW.y;
+        Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
+                .getScaledInstance((int) (BUTTON_SIZE), (int) (BUTTON_SIZE), Image.SCALE_FAST);
+        Icon icon = new ImageIcon(sprite);
+
+        JOptionPane.showMessageDialog(this, inputs,
+                "Make New .rag", JOptionPane.INFORMATION_MESSAGE, icon);
+
+        try {
+
+            Integer.parseInt(width.getText());
+            Integer.parseInt(height.getText());
+
+        } catch (NumberFormatException e) {
+            System.err.printf("\nProvided invalid numbers to width or height while making New in Gui\n");
+            JOptionPane.showMessageDialog(this,
+                    "Width or Height is not an Integer", "Error making New",
+                    JOptionPane.INFORMATION_MESSAGE, icon);
+        }
+
+        return String.format("%s [%s,%s]", title.getText(), width.getText(), height.getText());
     }
 
 }
