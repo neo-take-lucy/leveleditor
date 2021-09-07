@@ -4,6 +4,7 @@ import java.awt.*;
 
 public enum CompType {
     NULL(Color.PINK),
+    DELETE(Color.PINK),
     WALL(Color.BLACK),
     FLOOR(Color.BLUE),
     PLATFORM(Color.cyan),

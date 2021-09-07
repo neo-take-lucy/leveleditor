@@ -79,6 +79,7 @@ public class TerminalHandler {
                                             // store whats needed in smaller version, or just use
                                             // algoriddim to reference
         stringToValueEnum.put("(null)", CompType.NULL);
+        stringToValueEnum.put("(delete)", CompType.DELETE);
         stringToValueEnum.put("(floor)", CompType.FLOOR);
         stringToValueEnum.put("(platform)", CompType.PLATFORM);
         stringToValueEnum.put("(player)", CompType.PLAYER);
@@ -167,7 +168,6 @@ public class TerminalHandler {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
             }
-
         } else if (split[0].equals("-fill")) {
 
             MacroCommand macro = parseFill(split);
@@ -175,7 +175,20 @@ public class TerminalHandler {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
             }
-
+        } else if (split[0].equals("-delete")) {
+            //Check if there is an entity at mouse click
+            Hashtable<String, CompType> activeEnts = drawTo.getActiveSet();
+            split[1] = split[1].replace("[", "");
+            split[1] = split[1].replace("]", "");
+            String[] coOrds = split[1].split(",");
+            int x = Integer.parseInt(coOrds[0]);
+            int y = Integer.parseInt(coOrds[1]);
+            String stringCoord = String.format("[%d,%d]", x, y);
+            if (activeEnts.keySet().contains(stringCoord)) {
+                System.out.println("true");
+            } else {
+                System.out.println("false");
+            }
         } else if(split[0].equals("u")) {
             //Undo
             CommandService.undo();

@@ -40,6 +40,7 @@ public class Composer extends JComponent {
 
         // brush setting syntax: bi where i denotes a single character version
         brushSettings.put("b n", "(null)");        // but fuck it
+        brushSettings.put("b d", "(delete)");
         brushSettings.put("b f", "(floor)");
         brushSettings.put("b p", "(platform)");
         brushSettings.put("b a", "(player)"); // a for avatar

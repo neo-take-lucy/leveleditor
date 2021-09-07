@@ -60,6 +60,7 @@ enum BrushButtons {
 
     // maybe also save values relating to the coordinates in this?
     ERASER(new JButton(), "b n"), // sets brush to null
+    DELETE(new JButton(), "b d"), // delete entities
     FLOOR(new JButton(), "b f"),
     PLATFORM(new JButton(), "b p"),
     ROCKS(new JButton(), "b r"),
