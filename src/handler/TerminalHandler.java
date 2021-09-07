@@ -301,15 +301,6 @@ public class TerminalHandler {
         int y = Integer.parseInt(coOrds[1]);
 
         String stringCoord = String.format("[%d,%d]", x, y);
-
-        /*
-        if (activeEnts.containsKey(stringCoord)) {
-            System.out.println("true");
-        } else {
-            System.out.println("false");
-        }
-         */
-
         String name = activeEnts.get(stringCoord).name();
 
         CompType compType;
@@ -349,7 +340,11 @@ public class TerminalHandler {
                 break;
         }
 
-        return new DeleteCommand(drawTo, x, y, stringCoord, layer, compType);
+        if (activeEnts.containsKey(stringCoord)) {
+            return new DeleteCommand(drawTo, x, y, stringCoord, layer, compType);
+        } else {
+            return new PlaceCommand(drawTo, layer, x, y, compType);
+        }
     }
 
     private MacroCommand parseFill(String[] split) {

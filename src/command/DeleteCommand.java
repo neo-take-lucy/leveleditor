@@ -21,7 +21,7 @@ public class DeleteCommand extends Command {
      * @param drawTo sets the composition to draw to.
      */
     public DeleteCommand(Composition drawTo, int x, int y, String entity,
-                         Layer layer, CompType nextValue) {
+                         Layer layer, CompType previousValue) {
         super(drawTo);
 
         this.x = x;
@@ -31,8 +31,7 @@ public class DeleteCommand extends Command {
         entities = drawTo.getActiveSet();
 
         this.layer = layer;
-        this.previousValue = drawTo.getAtPoint(layer, x, y);
-        this.commandValue = nextValue;
+        this.previousValue = previousValue;
     }
 
     public void execute() {
