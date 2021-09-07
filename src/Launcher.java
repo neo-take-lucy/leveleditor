@@ -15,11 +15,13 @@ import java.awt.*;
 public class Launcher {
 
     private JFrame mainWindow;
+
+    private JPanel mainPanel;
+
     private Composer mainCanvas;
     private Composition mainPaint;
     private TerminalHandler terminalHandler;
     private ToolBox mainToolBox;
-
     private TerminalTextBox mainTextBox;
 
     public static void main(String args[]){
@@ -50,15 +52,10 @@ public class Launcher {
 
         initCommandService();
         initTerminalHandler();
+        initMouse();
+        initToolBox();
 
-        Mouse mouse = new Mouse(mainCanvas, terminalHandler);
-
-        mainCanvas.addMouseListener(mouse);
-        mainCanvas.addMouseMotionListener(mouse);
-
-        mainToolBox = new ToolBox(terminalHandler);
-
-        initMainWindow();
+        initMainPanel();
         terminalHandler.parseString("new default [10,10]");
 
         //Loader.loadOverride("LVL1", terminalHandler);
@@ -87,66 +84,35 @@ public class Launcher {
 
     }
 
-    private void initMainWindow() {
+    private void initMainPanel() {
 
-        mainWindow.getContentPane().add(mainCanvas, BorderLayout.CENTER);
-        mainWindow.getContentPane().add(mainTextBox, BorderLayout.PAGE_END);
-        mainWindow.getContentPane().add(mainToolBox, BorderLayout.EAST);
+        mainPanel = new JPanel(new BorderLayout());
 
-        mainCanvas.graphicalSettings(35, 24, 14);
+        mainPanel.add(mainCanvas, BorderLayout.CENTER);
+        mainPanel.add(mainTextBox, BorderLayout.PAGE_END);
+        mainPanel.add(mainToolBox, BorderLayout.EAST);
+
+        mainCanvas.graphicalSettings(35, 24, 20);
         mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
+        mainWindow.getContentPane().add(mainPanel);
+
         mainWindow.setVisible(true);
 
     }
 
-    private void loadTest() {
-        Loader.loadTest();
+    private void initMouse() {
+        Mouse mouse = new Mouse(mainCanvas, terminalHandler);
+
+        mainCanvas.addMouseListener(mouse);
+        mainCanvas.addMouseMotionListener(mouse);
     }
 
-    public void oldlaunch() {
-                /*Composition comp = new Composition(32, 16);
-        CompType whatHere;
+    private void initToolBox() {
+        mainToolBox = new ToolBox(terminalHandler);
+    }
 
-        TerminalHandler termHand = new TerminalHandler();
-        termHand.setComposition(comp);
-
-        termHand.parseString("-place [21,10] (wall)");
-        termHand.parseString("-place [11,2] (floor)");
-        termHand.parseString("-place [20,6] (wall)");
-
-        termHand.parseString("r");
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 21, 10);
-        System.out.println(whatHere);
-
-        CommandService.executeAll();
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 11, 2);
-        System.out.println(whatHere);
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 20, 6);
-        System.out.println(whatHere);
-        termHand.parseString("r");
-
-        termHand.parseString("u");
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 20, 6);
-        System.out.println(whatHere);
-
-        termHand.parseString("u");
-        termHand.parseString("u");
-        termHand.parseString("u");
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 21, 10);
-        System.out.println(whatHere);
-
-        comp.open();
-        //nextCommand.execute();
-        comp.close();
-
-        comp.open();
-        //nextCommand.unexecute();
-        comp.close();
-
-        whatHere = comp.getAtPoint(Layer.TERRAIN, 21, 10);
-
-
-        int x = 1 + 1; */
+    private void loadTest() {
+        Loader.loadTest();
     }
 
 

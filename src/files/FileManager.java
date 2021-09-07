@@ -16,16 +16,11 @@ public class FileManager {
 
         pathNames = f.list();
 
+        assert pathNames != null;
         for (String path : pathNames) {
             if (path.endsWith(fileType)) {
-
                 validRags.add(path.replace(fileType, ""));
-
             }
-        }
-
-        for (String s : validRags) {
-            System.out.println(s);
         }
 
     }
@@ -38,8 +33,8 @@ public class FileManager {
     }
 
     public static boolean isSaveFileInRags(String rag) {
-        makeValidList();
-        for(String fileInFolder : validRags) {
+
+        for(String fileInFolder : getRags()) {
             if (rag.equals(fileInFolder)) return true;
         }
         return false;

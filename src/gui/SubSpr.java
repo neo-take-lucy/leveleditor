@@ -25,7 +25,22 @@ public enum SubSpr {
 
     SAVE(32, 24, 40, 32),
     LOAD(40, 24, 48, 32),
-    NEW(48, 24, 56, 32);
+    NEW(48, 24, 56, 32),
+
+    ARROW_LEFT(40, 0, 0, 0),
+    ARROW_RIGHT(32, 0, 0, 0),
+    ARROW_UP(32, 8, 0, 0),
+    ARROW_DOWN(40, 8, 0, 0),
+
+    ZOOM_IN(56, 0, 0, 0),
+    ZOOM_OUT(48, 0, 0, 0),
+
+    RESET_ZOOM(32, 16, 0, 0),
+
+    UNDO(48, 8, 0, 0),
+    REDO(48, 8, 0, 0),
+
+    TOGGLE_TERM(56, 16, 0, 0);
 
     public int x;
     public int y;
