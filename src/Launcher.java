@@ -58,7 +58,7 @@ public class Launcher {
         initMainPanel();
         terminalHandler.parseString("new default [10,10]");
 
-        //Loader.loadOverride("LVL1", terminalHandler);
+        Loader.loadOverrideNew("jacktest", terminalHandler);
 
         //Saver.saveToFilePath(mainPaint, "test");
 

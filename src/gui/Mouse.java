@@ -79,6 +79,9 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
         if (gui.currentBrushSetting.equals("(player)")) {
             terminal.parseString(String.format("@player set [%d,%d]", gridX, gridY));
+        } else if (gui.currentBrushSetting.equals("(delete)")) {
+            terminal.parseString(String.format("-delete [%d,%d]", gridX,
+                    gridY, gui.currentBrushSetting));
         } else {
             terminal.parseString(String.format("-place [%d,%d] %s", gridX, gridY,
                     gui.currentBrushSetting));
