@@ -4,6 +4,7 @@ import files.Saver;
 import gui.Composer;
 import composition.Composition;
 import gui.Mouse;
+import gui.ToolBox;
 import handler.TerminalHandler;
 import gui.TerminalTextBox;
 
@@ -16,6 +17,7 @@ public class Launcher {
     private Composer mainCanvas;
     private Composition mainPaint;
     private TerminalHandler terminalHandler;
+    private ToolBox mainToolBox;
 
     private TerminalTextBox mainTextBox;
 
@@ -50,15 +52,20 @@ public class Launcher {
         mainCanvas.addMouseListener(mouse);
         mainCanvas.addMouseMotionListener(mouse);
 
+        mainToolBox = new ToolBox(terminalHandler);
+
         mainWindow.getContentPane().add(mainCanvas, BorderLayout.CENTER);
         mainWindow.getContentPane().add(mainTextBox, BorderLayout.PAGE_END);
+        mainWindow.getContentPane().add(mainToolBox, BorderLayout.EAST);
 
         mainCanvas.graphicalSettings(35, 24, 14);
         mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
         mainWindow.setVisible(true);
 
         terminalHandler.parseString("new default [10,10]");
+
         //Loader.loadOverride("LVL1", terminalHandler);
+
         Saver.saveToFilePath(mainPaint, "test");
 
         //terminalHandler.parseString("-place [10,10] (wall)");
