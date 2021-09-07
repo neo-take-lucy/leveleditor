@@ -1,9 +1,6 @@
 package handler;
 
-import command.Command;
-import command.CommandService;
-import command.MacroCommand;
-import command.PlaceCommand;
+import command.*;
 import composition.CompType;
 import composition.Composition;
 import composition.Layer;
@@ -177,17 +174,10 @@ public class TerminalHandler {
             }
         } else if (split[0].equals("-delete")) {
             //Check if there is an entity at mouse click
-            Hashtable<String, CompType> activeEnts = drawTo.getActiveSet();
-            split[1] = split[1].replace("[", "");
-            split[1] = split[1].replace("]", "");
-            String[] coOrds = split[1].split(",");
-            int x = Integer.parseInt(coOrds[0]);
-            int y = Integer.parseInt(coOrds[1]);
-            String stringCoord = String.format("[%d,%d]", x, y);
-            if (activeEnts.keySet().contains(stringCoord)) {
-                System.out.println("true");
-            } else {
-                System.out.println("false");
+            MacroCommand macro = parseDelete(split);
+            if (macro != null) {
+                CommandService.addCommand(macro, input);
+                CommandService.executeNext();
             }
         } else if(split[0].equals("u")) {
             //Undo
@@ -293,6 +283,73 @@ public class TerminalHandler {
         }
 
         return new PlaceCommand(drawTo, layer, x, y, compType);
+    }
+
+    private MacroCommand parseDelete(String[] split) {
+        MacroCommand macro = new MacroCommand(drawTo);
+        macro.add(delete(split));
+        return macro;
+    }
+
+    private Command delete(String[] split) {
+        Hashtable<String, CompType> activeEnts = drawTo.getActiveSet();
+        split[1] = split[1].replace("[", "");
+        split[1] = split[1].replace("]", "");
+        String[] coOrds = split[1].split(",");
+
+        int x = Integer.parseInt(coOrds[0]);
+        int y = Integer.parseInt(coOrds[1]);
+
+        String stringCoord = String.format("[%d,%d]", x, y);
+
+        /*
+        if (activeEnts.containsKey(stringCoord)) {
+            System.out.println("true");
+        } else {
+            System.out.println("false");
+        }
+         */
+
+        String name = activeEnts.get(stringCoord).name();
+
+        CompType compType;
+        Layer layer;
+        switch (name) {
+            case "(skeleton)":
+                compType = CompType.SKELETON;
+                layer = Layer.ACTIVE;
+                break;
+            case "(wolf)":
+                compType = CompType.WOLF;
+                layer = Layer.ACTIVE;
+                break;
+            case "(platform)":
+                compType = CompType.PLATFORM;
+                layer = Layer.TERRAIN;
+                break;
+            case "(spikes)":
+                compType = CompType.SPIKES;
+                layer = Layer.TERRAIN;
+                break;
+            case "(walls)":
+                compType = CompType.WALL;
+                layer = Layer.TERRAIN;
+                break;
+            case "(rock)":
+                compType = CompType.ROCKS;
+                layer = Layer.TERRAIN;
+                break;
+            case "(floor)":
+                compType = CompType.FLOOR;
+                layer = Layer.TERRAIN;
+                break;
+            default:
+                compType = CompType.NULL;
+                layer = Layer.TERRAIN;
+                break;
+        }
+
+        return new DeleteCommand(drawTo, x, y, stringCoord, layer, compType);
     }
 
     private MacroCommand parseFill(String[] split) {

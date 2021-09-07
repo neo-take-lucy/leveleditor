@@ -187,6 +187,10 @@ public class Composition {
         return null;
     }
 
+    public void setActiveSet(Hashtable<String, CompType> activeSet) {
+        this.activeSet = activeSet;
+    }
+
     public void setPlayerLocation(int x, int y) {
         playerLocation[0] = x;
         playerLocation[1] = y;
