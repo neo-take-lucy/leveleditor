@@ -3,10 +3,13 @@ package gui;
 import composition.CompType;
 import composition.Composition;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -25,8 +28,13 @@ public class Composer extends JComponent {
     private int OFFSET_HOZ;
     private int OFFSET_VERT;
 
+    private boolean isSpriteMode = true;
+
     private Composition painting;
     private Mouse mouse;
+
+    private BufferedImage spriteSheet;
+    private Hashtable<CompType, BufferedImage> subSprites;
 
     public Hashtable<String, String> brushSettings;   // this is consistent should should be more
                                                         // accessible
@@ -35,6 +43,13 @@ public class Composer extends JComponent {
     public Composer() {
         super();
 
+        try {
+            spriteSheet = ImageIO.read(new File("source/core/assets/configs/ragEditAssets/spritesheet.png"));
+        } catch (Exception e) {
+            System.err.print("Couldn't load spritesheet. Check: in configs/ragEditAssets/spritesheet.png\n");
+        }
+
+        initSubSprites();
 
         brushSettings = new Hashtable<>();
 
@@ -51,6 +66,24 @@ public class Composer extends JComponent {
         currentBrushSetting = brushSettings.get("b n");
 
 
+    }
+
+    public void initSubSprites() {
+
+        subSprites = new Hashtable<>();
+
+        for (CompType cT : CompType.values()) {
+
+            int x = cT.getSubSprite().x;
+            int y = cT.getSubSprite().y;
+            int ex = cT.getSubSprite().ex;
+            int ey = cT.getSubSprite().ey;
+
+
+            BufferedImage sprite = spriteSheet.getSubimage(x, y, 8, 8);
+
+            subSprites.put(cT, sprite);
+        }
     }
 
     public void setComposition(Composition grid) {
@@ -80,11 +113,18 @@ public class Composer extends JComponent {
 
                     //System.out.printf("x: %d, y: %d, terrain: %s\n", x, y, terrainAt.toString());
 
-                    g.setColor(terrainAt.getColor());
-                    g.fillRect( x * P_SCALE + halfEmb - OFFSET_HOZ,
-                                y * P_SCALE + halfEmb - OFFSET_VERT,
-                                    P_SCALE, P_SCALE);
+                    int drawX = x * P_SCALE + halfEmb - OFFSET_HOZ;
+                    int drawY = y * P_SCALE + halfEmb - OFFSET_VERT;
 
+                    isSpriteMode = true;
+                    if (isSpriteMode) {
+                        g.drawImage(subSprites.get(terrainAt), drawX, drawY, P_SCALE, P_SCALE, null);
+                    } else {
+                        g.setColor(terrainAt.getColor());
+                        g.fillRect( drawX,
+                                drawY,
+                                P_SCALE, P_SCALE);
+                    }
                     y++;
                 }
                 x++;
@@ -97,22 +137,39 @@ public class Composer extends JComponent {
                 int ax = Integer.parseInt(split[0]);
                 int ay = Integer.parseInt(split[1]);
 
-                g.setColor(activeSet.get(coOrd).getColor());
+                int drawX = ax * P_SCALE + halfEmb - OFFSET_HOZ;
+                int drawY = ay * P_SCALE + halfEmb - OFFSET_VERT;
 
-                g.fillRect(ax * P_SCALE + halfEmb - OFFSET_HOZ,
-                        ay * P_SCALE + halfEmb - OFFSET_VERT,
-                        P_SCALE, P_SCALE);
+                if (isSpriteMode) {
+                    g.drawImage(subSprites.get(activeSet.get(coOrd)), drawX, drawY, P_SCALE, P_SCALE, null);
+                } else {
+                    g.setColor(activeSet.get(coOrd).getColor());
+                    g.fillRect(drawX,
+                            drawY,
+                            P_SCALE, P_SCALE);
+                }
+
 
             }
 
-            g.setColor(CompType.PLAYER.getColor());
-
+            // drawing the player
             int px = painting.getPlayer()[0];
             int py = painting.getPlayer()[1];
 
-            g.fillRect(px * P_SCALE + halfEmb - OFFSET_HOZ,
-                    py * P_SCALE + halfEmb - OFFSET_VERT,
-                    P_SCALE, P_SCALE);
+            int drawX = px * P_SCALE + halfEmb - OFFSET_HOZ;
+            int drawY = py * P_SCALE + halfEmb - OFFSET_VERT;
+
+            if (isSpriteMode) {
+                g.drawImage(subSprites.get(CompType.PLAYER), drawX, drawY, P_SCALE, P_SCALE, null);
+            } else {
+                g.setColor(CompType.PLAYER.getColor());
+                g.fillRect(drawX,
+                        drawY,
+                        P_SCALE, P_SCALE);
+            }
+
+
+
         }
     }
 
@@ -121,7 +178,6 @@ public class Composer extends JComponent {
         setZoom(ps);
         T_WIDTH = tw;
         T_HEIGHT = th;
-
 
         SCREEN_WIDTH = T_WIDTH * P_SCALE + EMBOSS;
         SCREEN_HEIGHT = T_HEIGHT * P_SCALE + EMBOSS;
@@ -139,9 +195,15 @@ public class Composer extends JComponent {
     public void adjustHorizontalOffset(int offset) {
         OFFSET_HOZ += offset;
     }
+    public void setHorizontalOffset(int offset) {
+        OFFSET_HOZ = offset;
+    }
 
     public void adjustVerticalOffset(int offset) {
         OFFSET_VERT += offset;
+    }
+    public void setVerticalOffset(int offset) {
+        OFFSET_VERT = offset;
     }
 
     public int[] getGridAt(int mouseX, int mouseY) {
@@ -156,4 +218,40 @@ public class Composer extends JComponent {
         currentBrushSetting = brushSettings.get(fromTerm);
     }
 
+    public int getZoom() {
+        return P_SCALE;
+    }
+
 }
+
+/*enum SpriteSheetEnum {
+
+    // current spritesheet
+    // eahc is 8, S in line 2 is spikes, in line 3 skeleton
+    // . is blank
+    // FP......
+    // RS......
+    // WS......
+    // A
+
+
+    FLOOR(0, 0, 8, 8),
+    PLATFORM(8, 0, 16, 8),
+    ROCK(0, 8, 8, 16),
+    SPIKES(8, 8, 16, 16),
+    WOLF(0, 16, 8, 24),
+    SKELETON(8, 16, 16, 24),
+    AVATAR(0, 24, 8, 32);
+
+    public int x;
+    public int y;
+    public int ex;
+    public int ey;
+
+    private SpriteSheetEnum(int x, int y, int ex, int ey) {
+        this.x = x;
+        this.y = y;
+        this.ex = ex;
+        this.ey = ey;
+    }
+}*/

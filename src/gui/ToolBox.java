@@ -10,7 +10,10 @@ import java.util.LinkedList;
 
 public class ToolBox extends JComponent {
 
-    private ActionListener listener;
+    private ActionListener brushListener;
+
+    private ActionListener configListener;
+
     private TerminalHandler handler;
 
     public ToolBox(TerminalHandler handler) {
@@ -19,6 +22,8 @@ public class ToolBox extends JComponent {
         this.handler = handler;
 
         this.setLayout(new GridLayout(5, 1));
+        //this.setPreferredSize();
+
         init();
 
         //JButton coolButt = new JButton();
@@ -28,7 +33,7 @@ public class ToolBox extends JComponent {
 
     private void init() {
 
-        listener = new ActionListener() {
+        brushListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 handler.parseString(e.getActionCommand());
@@ -41,10 +46,12 @@ public class ToolBox extends JComponent {
         for (BrushButtons b : BrushButtons.values()) {
 
             b.getButton().setText(b.toString());
-            b.getButton().addActionListener(listener);
-            b.getButton().setActionCommand(b.getSetting());
 
-            this.add(b.getButton(), x);
+            b.getButton().addActionListener(brushListener);
+            b.getButton().setActionCommand(b.getSetting());
+            b.getButton().setPreferredSize(new Dimension(64, 64));
+
+            this.add(b.getButton());
 
             x++;
         }
@@ -65,7 +72,8 @@ enum BrushButtons {
     ROCKS(new JButton(), "b r"),
     SPIKES(new JButton(), "b v"),
     SKELETON(new JButton(), "b s"),
-    WOLF(new JButton(), "b w");
+    WOLF(new JButton(), "b w"),
+    DELETE(new JButton(), "delete");
 
     private JButton butt;
     private String setting;

@@ -1,4 +1,5 @@
 import command.CommandService;
+import files.FileManager;
 import files.Loader;
 import files.Saver;
 import gui.Composer;
@@ -25,6 +26,9 @@ public class Launcher {
 
         Launcher main = new Launcher();
         main.launch();
+
+        //FileManager.getRags();
+
         //main.loadTest();
 
         //main.launch();
@@ -32,7 +36,7 @@ public class Launcher {
 
     private void launch() {
 
-        mainWindow = new JFrame("Lightweight Level Editor");
+        mainWindow = new JFrame("ragEdit - Ghostface Killah !!!, my rhymes like garlic");
         mainWindow.setLayout(new BorderLayout());
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //mainWindow.setSize(32*32 + 64, 32*16 + 64 + 32);
@@ -54,19 +58,12 @@ public class Launcher {
 
         mainToolBox = new ToolBox(terminalHandler);
 
-        mainWindow.getContentPane().add(mainCanvas, BorderLayout.CENTER);
-        mainWindow.getContentPane().add(mainTextBox, BorderLayout.PAGE_END);
-        mainWindow.getContentPane().add(mainToolBox, BorderLayout.EAST);
-
-        mainCanvas.graphicalSettings(35, 24, 14);
-        mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
-        mainWindow.setVisible(true);
-
+        initMainWindow();
         terminalHandler.parseString("new default [10,10]");
 
         //Loader.loadOverride("LVL1", terminalHandler);
 
-        Saver.saveToFilePath(mainPaint, "test");
+        //Saver.saveToFilePath(mainPaint, "test");
 
         //terminalHandler.parseString("-place [10,10] (wall)");
         //CommandService.executeNext();
@@ -78,6 +75,7 @@ public class Launcher {
     }
 
     public void initTerminalHandler() {
+
         terminalHandler = new TerminalHandler();
         terminalHandler.setComposition(mainPaint);
         terminalHandler.setComposer(mainCanvas);
@@ -86,6 +84,19 @@ public class Launcher {
         mainTextBox = new TerminalTextBox();
         mainTextBox.setHandler(terminalHandler);
         mainTextBox.addActionListener(event -> mainTextBox.handleInput());
+
+    }
+
+    private void initMainWindow() {
+
+        mainWindow.getContentPane().add(mainCanvas, BorderLayout.CENTER);
+        mainWindow.getContentPane().add(mainTextBox, BorderLayout.PAGE_END);
+        mainWindow.getContentPane().add(mainToolBox, BorderLayout.EAST);
+
+        mainCanvas.graphicalSettings(35, 24, 14);
+        mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
+        mainWindow.setVisible(true);
+
     }
 
     private void loadTest() {

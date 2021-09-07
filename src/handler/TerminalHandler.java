@@ -81,7 +81,7 @@ public class TerminalHandler {
         stringToValueEnum.put("(null)", CompType.NULL);
         stringToValueEnum.put("(floor)", CompType.FLOOR);
         stringToValueEnum.put("(platform)", CompType.PLATFORM);
-        stringToValueEnum.put("(player)", CompType.PLAYER);
+        //stringToValueEnum.put("(player)", CompType.PLAYER);
         stringToValueEnum.put("(spikes)", CompType.SPIKES);
         stringToValueEnum.put("(rocks)", CompType.ROCKS);
         stringToValueEnum.put("(wall)", CompType.WALL);
@@ -360,14 +360,21 @@ public class TerminalHandler {
         int o_h = Integer.parseInt(split[1]);
         int o_v = Integer.parseInt(split[2]);
 
-        graphicTo.adjustHorizontalOffset(o_h);
-        graphicTo.adjustVerticalOffset(o_v);
+        //graphicTo.adjustHorizontalOffset(o_h);
+        //graphicTo.adjustVerticalOffset(o_v);
+
+        graphicTo.setHorizontalOffset(o_h);
+        graphicTo.setVerticalOffset(o_v);
+
+        //int zoom = graphicTo.getZoom();
+        //graphicTo.graphicalSettings(zoom, o_h, o_v);
         graphicTo.requestRedraw();
 
     }
 
     private void parseConZ(String[] split) {
-        int zoom = Integer.parseInt(split[1]);
+        int zoomAdjust = Integer.parseInt(split[1]);
+        int zoom = graphicTo.getZoom() + zoomAdjust;
         graphicTo.setZoom(zoom);
         graphicTo.requestRedraw();
     }
