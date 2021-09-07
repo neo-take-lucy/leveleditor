@@ -128,10 +128,22 @@ public class Loader {
                         break;
 
                     case '@':
-                        argsToRun.add(String.format("%s %s %s", args[0], args[1], args[2]));
+                        argsToRun.add(String.format("@%s %s %s", args[0], args[1], args[2]));
                         break;
 
                     case '-':
+
+                        //TO DOLAN:
+                        // the entites are saved from the game which indexes y going upscreen
+                        // so the whole height - y transformation has to happen forgot about that
+
+                        // fuck my liiiiiiife
+
+                        String[] coOrdArgs = args[1].replace("[","").replace("]","")
+                                                    .split(",");
+
+                        int sy = height - 1 - Integer.parseInt(coOrdArgs[1]);
+                        args[1] = String.format("[%s,%d]", coOrdArgs[0], sy);
                         argsToRun.add(String.format("-place %s %s", args[1], args[2]));
                         break;
 
@@ -228,55 +240,5 @@ public class Loader {
         }
 
     }
-
-    /*public void loadWorld() throws IOException {
-        // URL url = getClass().getResource("com/deco2800/game/entities/configs/LVL1.rag");
-        // spawnPlatform(1, LANE_0, 3);
-        // spawnPlatform(1, LANE_1, 4);
-        // spawnPlatform(1, LANE_2, 5);
-
-
-        File levelFile = new File("saves/LVL1.rag");
-        FileReader fr = new FileReader(levelFile);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-        float lane = 6.8f; // why do u have this number JACKSON!!!!!
-        while ((line = br.readLine()) != null) {
-            // TODO: PERFORM INPUT CHECKING ON LVL FILE
-            // also: encapsulate loader in Loader() class.
-            // can pass reference to GameArea instance if spawn functions wished to be called
-            // directly, but perhaps more elegant to introduce an intermediary
-            for (int i = 0; i < line.length(); i++) {
-                switch ((line.charAt(i))) {
-                    case 'P':
-                        // PLATFORM
-
-                        break;
-                    case 'F':
-                        // FLOOR
-                        spawnFloor(1, LANES[Math.round(lane/2)], (i*3));
-                        spawnFloor(1, LANES[Math.round(lane/2)], (i*3)+1);
-                        spawnFloor(1, LANES[Math.round(lane/2)], (i*3)+2);
-                        break;
-                    case 'A':
-                        //A for Avatar :) the last airbender
-                        player = spawnPlayer(LANES[Math.round(lane/2)]+1, (i*3)+1);
-                        break;
-                    case 'S':
-                        //SPIKE
-                        spawnSpike(LANES[Math.round(lane/2)]+1, (i*3)+1);
-                        break;
-                    case 'R':
-                        //ROCK
-                        spawnRock(LANES[Math.round(lane/2)]+1, (i*3)+1);
-                    default:
-                        break;
-                }
-            }
-            lane = lane -1;
-        }
-        br.close();
-        fr.close();
-    }*/
 
 }

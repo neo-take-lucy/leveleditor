@@ -35,6 +35,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
         //before this, send "-macro open" command
 
         if (gui.currentBrushSetting.equals("(player)")) return;
+        if (gui.currentBrushSetting.equals("(delete)")) return;
 
         terminal.parseString("-macro open");
 
@@ -81,7 +82,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
             terminal.parseString(String.format("@player set [%d,%d]", gridX, gridY));
         } else if (gui.currentBrushSetting.equals("(delete)")) {
             terminal.parseString(String.format("-delete [%d,%d]", gridX,
-                    gridY, gui.currentBrushSetting));
+                    gridY));
         } else {
             terminal.parseString(String.format("-place [%d,%d] %s", gridX, gridY,
                     gui.currentBrushSetting));

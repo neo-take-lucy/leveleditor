@@ -6,6 +6,7 @@ import java.awt.*;
 
 public enum CompType {
     NULL(Color.PINK, SubSpr.NULL),
+    DELETE(Color.PINK, SubSpr.DELETE),
     WALL(Color.BLACK, SubSpr.NULL),
     FLOOR(Color.BLUE, SubSpr.FLOOR),
     PLATFORM(Color.cyan, SubSpr.PLATFORM),

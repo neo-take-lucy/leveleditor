@@ -63,6 +63,7 @@ public class Composer extends JComponent {
         brushSettings.put("b r", "(rocks)");
         brushSettings.put("b w", "(wolf)");
         brushSettings.put("b s", "(skeleton)");
+        brushSettings.put("del", "(delete)");
 
         currentBrushSetting = brushSettings.get("b n");
 

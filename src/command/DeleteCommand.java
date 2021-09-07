@@ -10,34 +10,29 @@ public class DeleteCommand extends Command {
     private int x;
     private int y;
 
-    private Layer layer;
+    private String stringCoOrds;
     private CompType previousValue; //All paints/colours/enemies are model as enums
-    private CompType commandValue;
-    private String entity;
+
     Hashtable<String, CompType> entities;
 
     /**
      * Delete entity at specified location
      * @param drawTo sets the composition to draw to.
      */
-    public DeleteCommand(Composition drawTo, int x, int y, String entity,
-                         Layer layer, CompType previousValue) {
+    public DeleteCommand(Composition drawTo, String stringCoOrds) {
         super(drawTo);
 
-        this.x = x;
-        this.y = y;
+        this.stringCoOrds = stringCoOrds;
+        this.previousValue = drawTo.getActiveSet().get(stringCoOrds);
 
-        this.entity = entity;
-        entities = drawTo.getActiveSet();
-
-        this.layer = layer;
-        this.previousValue = previousValue;
     }
 
     public void execute() {
+
         drawTo.open();
         action();
         drawTo.close();
+
     }
 
     public void unexecute() {
@@ -48,12 +43,11 @@ public class DeleteCommand extends Command {
 
     protected void action() {
         // Remove an entity from the canvas
-        entities.remove(entity);
-        drawTo.setActiveSet(entities);
+        drawTo.deleteEntity(stringCoOrds);
     }
 
     protected void reverseAction() {
         // Re-add an entity that was removed from the canvas
-        drawTo.setAtLayer(layer, x, y, previousValue);
+        drawTo.replaceEntity(stringCoOrds, previousValue);
     }
 }

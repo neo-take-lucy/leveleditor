@@ -445,9 +445,9 @@ enum ConfigButtons {
     NEW(new JButton(), ">new", SubSpr.NEW), // sets brush to null
     SAVE(new JButton(), ">save", SubSpr.SAVE),
     LOAD(new JButton(), ">load", SubSpr.LOAD),
-    UNDO(new JButton(), ">undo", SubSpr.NULL),
-    REDO(new JButton(), ">redo", SubSpr.NULL),
-    TOGGLETERM(new JButton(), ">toggleTerm", SubSpr.NULL);
+    UNDO(new JButton(), ">undo", SubSpr.UNDO),
+    REDO(new JButton(), ">redo", SubSpr.REDO),
+    TOGGLE_TERM(new JButton(), ">toggleTerm", SubSpr.TOGGLE_TERM);
 
     private JButton butt;
     private String setting;
@@ -515,7 +515,7 @@ enum ActiveEntityButtons {
     // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    DELETE(new JButton(), "delete", SubSpr.DELETE),
+    DELETE(new JButton(), "del", SubSpr.DELETE),
     SKELETON(new JButton(), "b s", SubSpr.SKELETON),
     WOLF(new JButton(), "b w", SubSpr.WOLF);
 
@@ -549,7 +549,7 @@ enum ZoomScrollButtons {
         // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    DELETE(new JButton(), "delete", SubSpr.DELETE),
+    DELETE(new JButton(), "-delete", SubSpr.DELETE),
     SKELETON(new JButton(), "b s", SubSpr.SKELETON),
     WOLF(new JButton(), "b w", SubSpr.WOLF);
 

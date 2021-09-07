@@ -117,7 +117,7 @@ public class Composition {
             switch(layer) {
                 case ACTIVE:
                     String stringCoOrd = String.format("[%d,%d]", x, y);
-                    activeSet.put(stringCoOrd, value);
+                    if (!activeSet.containsKey(stringCoOrd)) activeSet.put(stringCoOrd, value);
                     break;
                 case TERRAIN:
                     terrainLayer[x][y] = value;
@@ -189,6 +189,18 @@ public class Composition {
 
     public void setActiveSet(Hashtable<String, CompType> activeSet) {
         this.activeSet = activeSet;
+    }
+
+    public void deleteEntity(String hashKey) {
+
+        this.activeSet.remove(hashKey);
+
+    }
+
+    public void replaceEntity(String hashKey, CompType value) {
+
+        this.activeSet.put(hashKey, value);
+
     }
 
     public void setPlayerLocation(int x, int y) {

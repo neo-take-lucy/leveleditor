@@ -57,6 +57,7 @@ public class TerminalHandler {
         validCommands.put("print", 2);      //print "phrase"
 
         validCommands.put("b", 2);          //b colour          REM: brush
+        validCommands.put("del", 1);        //delete            REM: sets the mouse to delete mode (activeEntites)
 
         validCommands.put("save", 2);       //save filename     REM: more args?
         validCommands.put("load", 2);       //load filename
@@ -102,7 +103,7 @@ public class TerminalHandler {
         String[] split = input.split(" ");
 
         if(!validCommands.containsKey(split[0])) {
-            System.err.println("Invalid command, try 'help'\n :: rem: not in validCommands");
+            System.err.printf("Invalid command %s, try 'help'\n :: rem: not in validCommands\n", split[0]);
             return;
         }
 
@@ -134,7 +135,7 @@ public class TerminalHandler {
                 } else if (split[0].equals("-macro")) {
                     if (split[1].equals("close")) {
 
-                        //System.out.println("in Macro Close");
+                        //TODO: implement ability to click n drag "delete"
 
                         macroFlag = false;
                         input = String.format("-macro %d", MacroCommand.totalMacros);
@@ -174,7 +175,9 @@ public class TerminalHandler {
             }
         } else if (split[0].equals("-delete")) {
             //Check if there is an entity at mouse click
+
             MacroCommand macro = parseDelete(split);
+
             if (macro != null) {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
@@ -203,7 +206,7 @@ public class TerminalHandler {
         } else if (split[0].equals("save")) {
             Saver.saveToFilePath(drawTo, split[1]);
         } else if (split[0].equals("load")) {
-            Loader.loadOverride(split[1], this);
+            Loader.loadOverrideNew(split[1], this);
             graphicTo.requestRedraw();
         } else if (split[0].equals("clear")) {
             parseClear();
@@ -211,6 +214,8 @@ public class TerminalHandler {
             parseNew(split);
         } else if (split[0].equals("@player")) {
             parseAtPlayer(split);
+        } else if (split[0].equals("del")) {
+            parseBrush(split[0]);
         }
 
         graphicTo.requestRedraw();
@@ -287,13 +292,23 @@ public class TerminalHandler {
 
     private MacroCommand parseDelete(String[] split) {
         MacroCommand macro = new MacroCommand(drawTo);
-        macro.add(delete(split));
+
+        Command del = delete(split);
+        if (del != null) macro.add(delete(split));
+        else return null;
+
         return macro;
     }
 
     private Command delete(String[] split) {
-        Hashtable<String, CompType> activeEnts = drawTo.getActiveSet();
-        split[1] = split[1].replace("[", "");
+
+        if (drawTo.getActiveSet().containsKey(split[1])) {
+            return new DeleteCommand(drawTo, split[1]);
+        } else {
+            return null;
+        }
+
+        /*split[1] = split[1].replace("[", "");
         split[1] = split[1].replace("]", "");
         String[] coOrds = split[1].split(",");
 
@@ -301,9 +316,8 @@ public class TerminalHandler {
         int y = Integer.parseInt(coOrds[1]);
 
         String stringCoord = String.format("[%d,%d]", x, y);
-        String name = activeEnts.get(stringCoord).name();
 
-        CompType compType;
+        /*CompType compType;
         Layer layer;
         switch (name) {
             case "(skeleton)":
@@ -341,10 +355,10 @@ public class TerminalHandler {
         }
 
         if (activeEnts.containsKey(stringCoord)) {
-            return new DeleteCommand(drawTo, x, y, stringCoord, layer, compType);
+
         } else {
-            return new PlaceCommand(drawTo, layer, x, y, compType);
-        }
+            return null; //PlaceCommand(drawTo, layer, x, y, compType);
+        } */
     }
 
     private MacroCommand parseFill(String[] split) {

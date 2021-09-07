@@ -37,7 +37,7 @@ public enum SubSpr {
 
     RESET_ZOOM(32, 16, 0, 0),
 
-    UNDO(48, 8, 0, 0),
+    UNDO(56, 8, 0, 0),
     REDO(48, 8, 0, 0),
 
     TOGGLE_TERM(56, 16, 0, 0);
