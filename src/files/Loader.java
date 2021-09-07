@@ -6,6 +6,10 @@ import composition.Composition;
 import handler.TerminalHandler;
 
 import java.io.*;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Loader {
 
@@ -38,6 +42,112 @@ public class Loader {
             } catch (IOException e) {
                 System.err.printf("Some error w/ IO in filepath %s", pathName);
             }
+        }
+    }
+
+    public static void loadOverrideNew(String name, TerminalHandler writer) {
+        Hashtable<String, String> entities = new Hashtable<>();
+        entities.put(".", "(null)");
+        entities.put("F", "(floor)");
+        entities.put("P", "(platform)");
+        entities.put("S", "(spikes)");
+        entities.put("R", "(rocks)");
+
+        writer.parseString("clear");
+
+        String filepath = "source/core/assets/configs/rags/" + name + ".rag";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+
+            String line;
+            String title = null;
+
+            int width = 0;
+            int height = 0;
+
+            ArrayList<String> argsToRun = new ArrayList<>();
+            int x = 0;
+
+            while ((line = br.readLine()) != null) {
+                if (line.length() == 0) {
+                    continue;
+                }
+
+                if (line.charAt(0) != '$') {
+                    throw new IOException();
+                }
+
+                char specifier = line.charAt(1);
+                String delim = " ";
+
+                if (specifier == '#') {
+                    delim = "";
+                }
+
+                String[] args = line.substring(2).split(delim);
+
+                switch (specifier) {
+                    case '_':
+                        String config = args[0];
+                        String value = args[1];
+
+                        if (config.equals("title")) {
+                            title = value;
+                        }
+
+                        if (config.equals("width")) {
+                            try {
+                                width = Integer.parseInt(value);
+                            } catch (NumberFormatException exception) {
+                                System.err.print("Could not parse width/height value");
+                            }
+                        } else if (config.equals("height")) {
+                            try {
+                                height = Integer.parseInt(value);
+                            } catch (NumberFormatException exception) {
+                                System.err.print("Could not parse width/height value");
+                            }
+                        }
+
+                        break;
+
+                    case '#':
+                        int y = 0;
+
+                        for (String key: args) {
+                            argsToRun.add(String.format("-place [%d,%d] %s"
+                            , x
+                            , y
+                            , entities.get(key)));
+
+                            y++;
+                        }
+
+                        x++;
+
+                        break;
+
+                    case '@':
+                        argsToRun.add(String.format("%s %s %s", args[0], args[1], args[2]));
+                        break;
+
+                    case '-':
+                        argsToRun.add(String.format("-place %s %s", args[1], args[2]));
+                        break;
+
+                    default:
+                        throw new IOException();
+                }
+            }
+
+            argsToRun.add(0, String.format("new %s [%d,%d]", title, width, height));
+
+            for (String arg: argsToRun) {
+                writer.parseString(arg);
+            }
+
+        } catch (IOException e) {
+            System.err.print("Error loading file");
         }
     }
 
