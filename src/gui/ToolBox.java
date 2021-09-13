@@ -24,6 +24,7 @@ public class ToolBox extends JPanel {
     private ActionListener brushListener;
 
     private JPanel activePanel;
+    private JPanel zoomPanel;
 
     private TerminalHandler handler;
 
@@ -113,6 +114,23 @@ public class ToolBox extends JPanel {
             //subSprites.put(cT, sprite);
         }
 
+        for (ZoomScrollButtons zB : ZoomScrollButtons.values()) {
+
+            SubSpr sS = zB.getSubSprite();
+
+            int x = sS.x;
+            int y = sS.y;
+
+            Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
+                    .getScaledInstance((int) (BUTTON_SIZE * 0.75), (int) (BUTTON_SIZE * 0.75), Image.SCALE_FAST);
+            Icon buttonIcon = new ImageIcon(sprite);
+
+            zB.getButton().setIcon(buttonIcon);
+            zB.getButton().setBorderPainted(false);
+
+            //subSprites.put(cT, sprite);
+        }
+
     }
 
     private void initMainPanel() {
@@ -125,16 +143,14 @@ public class ToolBox extends JPanel {
         configPanel = initConfigPanel();
         terrainPanel = initTerrainPanel();
         activePanel = initActiveEntityPanel();
+        zoomPanel = initZoomPanel();
 
         c.fill = GridBagConstraints.NONE;
 
         this.add(configPanel, c);
-
-        //c.gridy = 1;
         this.add(terrainPanel, c);
-
-        //c.gridy = 2;
         this.add(activePanel, c);
+        this.add(zoomPanel, c);
 
         //grid.layoutContainer(this);
 
@@ -195,7 +211,9 @@ public class ToolBox extends JPanel {
                         handler.parseString("r");
                         break;
                         // parse "r"
-                    case ">toggleTerm":
+                    case ">toggleterm":
+                        handler.parseString("toggleterm");
+                        break;
                 }
 
                 /*NEW(new JButton(), ">new"), // sets brush to null
@@ -339,6 +357,46 @@ public class ToolBox extends JPanel {
 
     }
 
+    private JPanel initZoomPanel() {
+        zoomPanel = new JPanel(new GridBagLayout());
+        zoomPanel.setPreferredSize(new Dimension(BUTTON_SIZE * 3, BUTTON_SIZE * 2));
+        GridBagConstraints c = new GridBagConstraints();
+
+        //Make the Label
+        c.fill = GridBagConstraints.CENTER;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        c.gridheight = 1;
+
+        zoomPanel.add(new JLabel("Zoom / Scroll"), c);
+
+        c.gridwidth = 1;
+        c.gridheight = 1;
+
+        //Make the Buttons and Put Them In
+        int i = 3;
+        for (ZoomScrollButtons b : ZoomScrollButtons.values()) {
+            int y = i / 3;
+            int x = i % 3;
+
+            //b.getButton().setText(b.toString());
+            b.getButton().addActionListener(brushListener);
+            b.getButton().setActionCommand(b.getSetting());
+            b.getButton().setPreferredSize(new Dimension(BUTTON_SIZE, BUTTON_SIZE));
+
+            //c.fill = GridBagConstraints.CENTER
+            c.gridx = x;
+            c.gridy = y;
+
+            zoomPanel.add(b.getButton(), c);
+
+            i++;
+        }
+
+        return zoomPanel;
+    }
+
     private String getLoadDialog() {
 
         int x = SubSpr.LOAD.x;
@@ -447,7 +505,7 @@ enum ConfigButtons {
     LOAD(new JButton(), ">load", SubSpr.LOAD),
     UNDO(new JButton(), ">undo", SubSpr.UNDO),
     REDO(new JButton(), ">redo", SubSpr.REDO),
-    TOGGLE_TERM(new JButton(), ">toggleTerm", SubSpr.TOGGLE_TERM);
+    TOGGLE_TERM(new JButton(), ">toggleterm", SubSpr.TOGGLE_TERM);
 
     private JButton butt;
     private String setting;
@@ -549,9 +607,8 @@ enum ZoomScrollButtons {
         // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    DELETE(new JButton(), "-delete", SubSpr.DELETE),
-    SKELETON(new JButton(), "b s", SubSpr.SKELETON),
-    WOLF(new JButton(), "b w", SubSpr.WOLF);
+    ARROW_LEFT(new JButton(), "con_o -100 0", SubSpr.ARROW_LEFT),
+    ARROW_RIGHT(new JButton(), "con_o 100 0", SubSpr.ARROW_RIGHT);
 
     private JButton butt;
     private String setting;

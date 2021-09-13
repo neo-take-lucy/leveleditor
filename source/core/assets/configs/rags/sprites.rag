@@ -1,0 +1,22 @@
+$_title default
+$_width 10
+$_height 10
+
+$#.........P
+$#.........P
+$#.........P
+$#.........P
+$#.......P.P
+$#......FP.P
+$#......P..P
+$#......P..P
+$#.....FP..P
+$#.....FP..P
+
+$@player set [2,1]
+
+$-spawn [8,1] (skeleton)
+$-spawn [7,1] (wolf)
+$-spawn [6,1] (skeleton)
+$-spawn [9,1] (wolf)
+

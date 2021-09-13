@@ -81,6 +81,7 @@ public class Launcher {
         mainTextBox = new TerminalTextBox();
         mainTextBox.setHandler(terminalHandler);
         mainTextBox.addActionListener(event -> mainTextBox.handleInput());
+        terminalHandler.setTerminalTo(mainTextBox);
 
     }
 
@@ -90,6 +91,9 @@ public class Launcher {
 
         mainPanel.add(mainCanvas, BorderLayout.CENTER);
         mainPanel.add(mainTextBox, BorderLayout.PAGE_END);
+
+        mainTextBox.setVisible(false);
+
         mainPanel.add(mainToolBox, BorderLayout.EAST);
 
         mainCanvas.graphicalSettings(35, 24, 20);

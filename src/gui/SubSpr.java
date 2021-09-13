@@ -27,8 +27,8 @@ public enum SubSpr {
     LOAD(40, 24, 48, 32),
     NEW(48, 24, 56, 32),
 
-    ARROW_LEFT(40, 0, 0, 0),
-    ARROW_RIGHT(32, 0, 0, 0),
+    ARROW_LEFT(32, 0, 0, 0),
+    ARROW_RIGHT(40, 0, 0, 0),
     ARROW_UP(32, 8, 0, 0),
     ARROW_DOWN(40, 8, 0, 0),
 

@@ -7,6 +7,7 @@ import composition.Layer;
 import files.Loader;
 import files.Saver;
 import gui.Composer;
+import gui.TerminalTextBox;
 
 import javax.swing.*;
 import java.util.Hashtable;
@@ -21,6 +22,7 @@ public class TerminalHandler {
     private Composition drawTo;
     private Composer graphicTo;
     private JFrame canvasTo;
+    private TerminalTextBox terminalTo;
 
     private Hashtable<String, CompType> stringToValueEnum = new Hashtable<String, CompType>();
 
@@ -66,6 +68,8 @@ public class TerminalHandler {
 
         validCommands.put("@player", 3);    //@player [command] [command argument]
 
+        validCommands.put("toggleterm", 1); // terminal
+
         //TODO: save filename : with restrictions, saves to working dir of ragnarok racer
         //TODO: load filename : loads file from filename
         //TODO: new : with parameters -> make new file return false if
@@ -96,6 +100,9 @@ public class TerminalHandler {
     }
     public void setCanvas(JFrame can) {
         this.canvasTo = can;
+    }
+    public void setTerminalTo(TerminalTextBox gui) {
+        this.terminalTo = gui;
     }
 
     public void parseString(String input) {
@@ -216,6 +223,8 @@ public class TerminalHandler {
             parseAtPlayer(split);
         } else if (split[0].equals("del")) {
             parseBrush(split[0]);
+        } else if (split[0].equals("toggleterm")) {
+            terminalTo.toggleTerminal();
         }
 
         graphicTo.requestRedraw();
@@ -307,58 +316,6 @@ public class TerminalHandler {
         } else {
             return null;
         }
-
-        /*split[1] = split[1].replace("[", "");
-        split[1] = split[1].replace("]", "");
-        String[] coOrds = split[1].split(",");
-
-        int x = Integer.parseInt(coOrds[0]);
-        int y = Integer.parseInt(coOrds[1]);
-
-        String stringCoord = String.format("[%d,%d]", x, y);
-
-        /*CompType compType;
-        Layer layer;
-        switch (name) {
-            case "(skeleton)":
-                compType = CompType.SKELETON;
-                layer = Layer.ACTIVE;
-                break;
-            case "(wolf)":
-                compType = CompType.WOLF;
-                layer = Layer.ACTIVE;
-                break;
-            case "(platform)":
-                compType = CompType.PLATFORM;
-                layer = Layer.TERRAIN;
-                break;
-            case "(spikes)":
-                compType = CompType.SPIKES;
-                layer = Layer.TERRAIN;
-                break;
-            case "(walls)":
-                compType = CompType.WALL;
-                layer = Layer.TERRAIN;
-                break;
-            case "(rock)":
-                compType = CompType.ROCKS;
-                layer = Layer.TERRAIN;
-                break;
-            case "(floor)":
-                compType = CompType.FLOOR;
-                layer = Layer.TERRAIN;
-                break;
-            default:
-                compType = CompType.NULL;
-                layer = Layer.TERRAIN;
-                break;
-        }
-
-        if (activeEnts.containsKey(stringCoord)) {
-
-        } else {
-            return null; //PlaceCommand(drawTo, layer, x, y, compType);
-        } */
     }
 
     private MacroCommand parseFill(String[] split) {
@@ -439,11 +396,11 @@ public class TerminalHandler {
         int o_h = Integer.parseInt(split[1]);
         int o_v = Integer.parseInt(split[2]);
 
-        //graphicTo.adjustHorizontalOffset(o_h);
-        //graphicTo.adjustVerticalOffset(o_v);
+        graphicTo.adjustHorizontalOffset(o_h);
+        graphicTo.adjustVerticalOffset(o_v);
 
-        graphicTo.setHorizontalOffset(o_h);
-        graphicTo.setVerticalOffset(o_v);
+        //graphicTo.setHorizontalOffset(o_h);
+        //graphicTo.setVerticalOffset(o_v);
 
         //int zoom = graphicTo.getZoom();
         //graphicTo.graphicalSettings(zoom, o_h, o_v);

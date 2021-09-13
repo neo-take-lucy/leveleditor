@@ -8,6 +8,7 @@ import javax.swing.*;
 public class TerminalTextBox extends JTextField {
 
     private TerminalHandler handler;
+    private boolean isTerminalOn = false;
 
     public TerminalTextBox() {
         super();
@@ -28,6 +29,12 @@ public class TerminalTextBox extends JTextField {
         handler.parseString(text);
         //CommandService.executeNext();
         this.setText("");
+    }
+
+    public void toggleTerminal() {
+        isTerminalOn = !isTerminalOn;
+        this.setVisible(isTerminalOn);
+        this.getParent().validate();
     }
 
 }
