@@ -1,5 +1,8 @@
 package gui;
 
+/**
+ * A ridiculously monolithic list of subSpr coordinates
+ */
 public enum SubSpr {
 
     // current spritesheet

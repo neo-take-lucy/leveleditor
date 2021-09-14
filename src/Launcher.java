@@ -27,19 +27,16 @@ public class Launcher {
         Launcher main = new Launcher();
         main.launch();
 
-        //FileManager.getRags();
-
-        //main.loadTest();
-
-        //main.launch();
     }
 
+    /**
+     * Launches the program. Makes calls to other init methods.
+     */
     private void launch() {
 
         mainWindow = new JFrame("ragEdit - Ghostface Killah !!!, my rhymes like garlic");
         mainWindow.setLayout(new BorderLayout());
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //mainWindow.setSize(32*32 + 64, 32*16 + 64 + 32);
 
         terminalHandler = new TerminalHandler();
 
@@ -58,18 +55,19 @@ public class Launcher {
 
         Loader.loadOverride("jacktest", terminalHandler);
 
-        //Saver.saveToFilePath(mainPaint, "test");
-
-        //terminalHandler.parseString("-place [10,10] (wall)");
-        //CommandService.executeNext();
-
     }
 
-    public void initCommandService() {
+    /**
+     * Sets the mainCanvas (a Composer) of the commandService
+     */
+    private void initCommandService() {
         CommandService.setMain(mainCanvas);
     }
 
-    public void initTerminalHandler() {
+    /**
+     * Sets all the interfaces up for the TerminalHandler.... . . . . . . .
+     */
+    private void initTerminalHandler() {
 
         terminalHandler = new TerminalHandler();
         terminalHandler.setComposition(mainPaint);
@@ -83,6 +81,9 @@ public class Launcher {
 
     }
 
+    /**
+     * The mainPanel is the tilemap of the level.
+     */
     private void initMainPanel() {
 
         mainPanel = new JPanel(new BorderLayout());
@@ -102,6 +103,9 @@ public class Launcher {
 
     }
 
+    /**
+     * Initialises the mouse.
+     */
     private void initMouse() {
         Mouse mouse = new Mouse(mainCanvas, terminalHandler);
 
@@ -109,6 +113,9 @@ public class Launcher {
         mainCanvas.addMouseMotionListener(mouse);
     }
 
+    /**
+     * Initialises the ToolBox (the display of buttons to interface with the editor)
+     */
     private void initToolBox() {
         mainToolBox = new ToolBox(terminalHandler);
     }

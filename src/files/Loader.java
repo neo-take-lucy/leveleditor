@@ -34,7 +34,7 @@ public class Loader {
      * REM: remind john to make a single data structure for the saver and loader.
      */
     private static void initTerrainChars() {
-        Hashtable<String, String> terrainChars = new Hashtable<>();
+        terrainChars = new Hashtable<>();
 
         terrainChars.put(".", "(null)");
         terrainChars.put("F", "(floor)");

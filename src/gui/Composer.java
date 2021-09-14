@@ -6,14 +6,14 @@ import composition.Composition;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 
+/**
+ * GUI Representation of the Composition.
+ * Extends the JComponent class, and overrides the draw method to display the current map
+ */
 public class Composer extends JComponent {
 
     private int P_SCALE = 20; //pixel scale
@@ -43,6 +43,7 @@ public class Composer extends JComponent {
     public Composer() {
         super();
 
+        // gets the Spritesheet
         try {
             spriteSheet = ImageIO.read(new File("source/core/assets/configs/ragEditAssets/spritesheet.png"));
         } catch (Exception e) {
@@ -50,7 +51,40 @@ public class Composer extends JComponent {
         }
 
         initSubSprites();
+        initBrushSettings();
 
+        currentBrushSetting = brushSettings.get("b n");
+
+
+    }
+
+    /**
+     * Initialises the Sprites to represent the map etc.
+     * To add more sprites, you would need to extend the CompType Enum, and
+     * assign the subSprite coordinates of the sprite.
+     */
+    private void initSubSprites() {
+
+        subSprites = new Hashtable<>();
+
+        for (CompType cT : CompType.values()) {
+
+            int x = cT.getSubSprite().x;
+            int y = cT.getSubSprite().y;
+
+            BufferedImage sprite = spriteSheet.getSubimage(x, y, 8, 8);
+
+            subSprites.put(cT, sprite);
+        }
+    }
+
+    /**
+     * Initialises the brush settings, which are the (type) arguments that
+     * the mouse sends to the TerminalHandler.
+     * To extend the (type)s that TerminalHandler accepts from the mouse,
+     * you would need to add to this list.
+     */
+    private void initBrushSettings() {
         brushSettings = new Hashtable<>();
 
         // brush setting syntax: bi where i denotes a single character version
@@ -64,34 +98,16 @@ public class Composer extends JComponent {
         brushSettings.put("b w", "(wolf)");
         brushSettings.put("b s", "(skeleton)");
         brushSettings.put("del", "(delete)");
-
-        currentBrushSetting = brushSettings.get("b n");
-
-
-    }
-
-    public void initSubSprites() {
-
-        subSprites = new Hashtable<>();
-
-        for (CompType cT : CompType.values()) {
-
-            int x = cT.getSubSprite().x;
-            int y = cT.getSubSprite().y;
-            int ex = cT.getSubSprite().ex;
-            int ey = cT.getSubSprite().ey;
-
-
-            BufferedImage sprite = spriteSheet.getSubimage(x, y, 8, 8);
-
-            subSprites.put(cT, sprite);
-        }
     }
 
     public void setComposition(Composition grid) {
         painting = grid;
     }
 
+    /**
+     * This function is used to make public calls to the repaint() method
+     * of the JComponent class
+     */
     public void requestRedraw() {
 
         this.getParent().repaint();
@@ -101,24 +117,27 @@ public class Composer extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
 
-        //g.fillRect(0, 0, 100, 100);
         int halfEmb = EMBOSS/2;
+        isSpriteMode = true;    // if this is set to false, will display squares of stuff...
+                                // could be a useful mode if you want to extend and check functionality
+                                // without drawing new sprites
 
+        // won't paint if the painting stream is open... this is like some silly double-buffering
+        // inspired data protection... i doubt it does anything
         if(!painting.isOpen()) {
             CompType[][] terrainLayer = painting.getTerrainLayer();
             Hashtable<String, CompType> activeSet = painting.getActiveSet();
 
+            // draws the terrain
             int x = 0;
             for (CompType[] column : terrainLayer) {
                 int y = 0;
                 for (CompType terrainAt : column) {
 
-                    //System.out.printf("x: %d, y: %d, terrain: %s\n", x, y, terrainAt.toString());
-
                     int drawX = x * P_SCALE + halfEmb - OFFSET_HOZ;
                     int drawY = y * P_SCALE + halfEmb - OFFSET_VERT;
 
-                    isSpriteMode = true;
+
                     if (isSpriteMode) {
                         g.drawImage(subSprites.get(terrainAt), drawX, drawY, P_SCALE, P_SCALE, null);
                     } else {
@@ -132,6 +151,7 @@ public class Composer extends JComponent {
                 x++;
             }
 
+            // draws the entities
             for (String coOrd : activeSet.keySet()) {
 
                 String trimmedCoOrd = coOrd.replace("[","").replace("]","");
@@ -175,6 +195,14 @@ public class Composer extends JComponent {
         }
     }
 
+    /**
+     * Sets the graphical settings of the Composer.
+     * This can be set via the con_s [ps] [tw] [th] command,
+     * but calls to "con_o" and "con_z" are preferred
+     * @param ps Pixel Size (the size of each Tile)
+     * @param tw Tile Width (the amount of tiles horizontal)
+     * @param th Tile Height (the amount of tiles vertically)
+     */
     public void graphicalSettings(int ps, int tw, int th) {
 
         setZoom(ps);
@@ -185,6 +213,11 @@ public class Composer extends JComponent {
         SCREEN_HEIGHT = T_HEIGHT * P_SCALE + EMBOSS;
     }
 
+    /**
+     * Sets the size of each tile (effectively zooming in/out).
+     * This can be set via the con_z [ps] command
+     * @param ps pixel size.
+     */
     public void setZoom(int ps) {
         P_SCALE = ps;
         //EMBOSS = P_SCALE*8;
@@ -194,6 +227,7 @@ public class Composer extends JComponent {
         return new int[]{SCREEN_WIDTH, SCREEN_HEIGHT};
     }
 
+    // this is a whole family of functions to deal with the offset etc...
     public void adjustHorizontalOffset(int offset) {
         OFFSET_HOZ += offset;
     }
@@ -208,6 +242,13 @@ public class Composer extends JComponent {
         OFFSET_VERT = offset;
     }
 
+    /**
+     * Returns the grid-coordinate under the mouse, and uses math to do so!
+     * I'm so happy
+     * @param mouseX mouse X position
+     * @param mouseY mouse Y position
+     * @return int[] of gird coordinates.
+     */
     public int[] getGridAt(int mouseX, int mouseY) {
 
         int gridX = (int) Math.floor((mouseX + OFFSET_HOZ - EMBOSS/2.0)/(double)P_SCALE);
@@ -216,44 +257,22 @@ public class Composer extends JComponent {
         return new int[]{gridX, gridY};
     }
 
+    /**
+     * This is called by the terminalHandler to set the brushSetting via
+     * the b [setting] command.
+     * @param fromTerm single char brush argument
+     */
     public void putBrushFromTerm(String fromTerm) {
         currentBrushSetting = brushSettings.get(fromTerm);
     }
 
+    /**
+     * Returns the zooooooooooooooom.
+     * This is used to adjust zoom gradually.
+     * @return the zoooooooom
+     */
     public int getZoom() {
         return P_SCALE;
     }
 
 }
-
-/*enum SpriteSheetEnum {
-
-    // current spritesheet
-    // eahc is 8, S in line 2 is spikes, in line 3 skeleton
-    // . is blank
-    // FP......
-    // RS......
-    // WS......
-    // A
-
-
-    FLOOR(0, 0, 8, 8),
-    PLATFORM(8, 0, 16, 8),
-    ROCK(0, 8, 8, 16),
-    SPIKES(8, 8, 16, 16),
-    WOLF(0, 16, 8, 24),
-    SKELETON(8, 16, 16, 24),
-    AVATAR(0, 24, 8, 32);
-
-    public int x;
-    public int y;
-    public int ex;
-    public int ey;
-
-    private SpriteSheetEnum(int x, int y, int ex, int ey) {
-        this.x = x;
-        this.y = y;
-        this.ex = ex;
-        this.ey = ey;
-    }
-}*/

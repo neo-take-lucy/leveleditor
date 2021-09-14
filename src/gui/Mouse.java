@@ -8,6 +8,9 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+/**
+ * Mouse extends the Swing mouse classes...
+ */
 public class Mouse implements MouseListener, MouseMotionListener {
 
     Composer gui;
@@ -32,8 +35,6 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
     public void spindleCoOrds() {
 
-        //before this, send "-macro open" command
-
         if (gui.currentBrushSetting.equals("(player)")) return;
         if (gui.currentBrushSetting.equals("(delete)")) return;
 
@@ -41,20 +42,13 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
         for (String c : coDrag) {
 
-            //System.out.println(c);
-
             StringBuilder placeString = new StringBuilder("-place ");
             placeString.append(c);
             placeString.append(" ").append(gui.currentBrushSetting);
 
-            //System.out.println(placeString.toString());
-
             terminal.parseString(placeString.toString());
 
         }
-        //after this, send "-macro close" command
-
-        //System.err.println("mouse click sent -macro close");
         terminal.parseString("-macro close");
 
         coDrag.clear();

@@ -12,9 +12,14 @@ import gui.TerminalTextBox;
 import javax.swing.*;
 import java.util.Hashtable;
 
+/**
+ * TerminalHandler is a stupidly messy and monolithic class used to handle commands that are written into
+ * the terminal (and thus exists as the entire interface of the program)
+ *
+ * REM: if you're reading this, find John, grab him, shake him by the shoulders and scream in his ears
+ * "FIX THE TERMINALHANDLER YOU HACK FRAUD"
+ */
 public class TerminalHandler {
-
-    private String[] split;
 
     //String: command title, Integer: arguments
     private Hashtable<String, Integer> validCommands = new Hashtable<>();
@@ -36,10 +41,14 @@ public class TerminalHandler {
         makeValidStringToEnum();
     }
 
+    /**
+     * Creates a list of valid first arguments that the terminal will accept.
+     * This is the first step to extending functionality, putting a new validCommand and
+     * the amount of arguments it accepts.
+     */
     private void makeValidCommands() {
 
         //commands without dashes are not "Commands", they reference other methods
-
         validCommands.put("help", 1);
 
         validCommands.put("-place", 3);     //-place [coords] (value)
@@ -77,6 +86,10 @@ public class TerminalHandler {
 
     }
 
+    /**
+     * Another example of the unspingling of a bunch of data that could be stored in one place.
+     * This list makes sure the correct CompType is sent to the Place.
+     */
     private void makeValidStringToEnum() {  // put this and the one in compose together in an enum,
                                             // store whats needed in smaller version, or just use
                                             // algoriddim to reference
@@ -84,7 +97,6 @@ public class TerminalHandler {
         stringToValueEnum.put("(delete)", CompType.DELETE);
         stringToValueEnum.put("(floor)", CompType.FLOOR);
         stringToValueEnum.put("(platform)", CompType.PLATFORM);
-        //stringToValueEnum.put("(player)", CompType.PLAYER);
         stringToValueEnum.put("(spikes)", CompType.SPIKES);
         stringToValueEnum.put("(rocks)", CompType.ROCKS);
         stringToValueEnum.put("(wall)", CompType.WALL);
@@ -105,6 +117,12 @@ public class TerminalHandler {
         this.terminalTo = gui;
     }
 
+    /**
+     * Parses the string inputted into it. Currently just sends it to a huge switch statement,
+     * which could hopefully be cleaned up by possibly having the validCommands table send
+     * lambda functions? maybe? could be neat?
+     * @param input
+     */
     public void parseString(String input) {
 
         String[] split = input.split(" ");
@@ -119,10 +137,9 @@ public class TerminalHandler {
             return;
         }
 
+        // if the macroFlag is set, then the program will be locked into this mode, which is pretty unclean, as really
+        // commands should be added, and the macro consideration take place at end
         if(macroFlag) {
-            //System.out.println("in Macro Open:");
-
-            //MacroCommand flaggedMacro = null;
             if(!isMacroMade) {
                 flaggedMacro = new MacroCommand(drawTo);
                 isMacroMade = true;
@@ -173,14 +190,18 @@ public class TerminalHandler {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
             }
-        } else if (split[0].equals("-fill")) {
+        }
+        // fill makes rectangles. the mouse functionality for this isn't in yet
+        else if (split[0].equals("-fill")) {
 
             MacroCommand macro = parseFill(split);
             if (macro != null) {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
             }
-        } else if (split[0].equals("-delete")) {
+        }
+        // delete deletes entites.
+        else if (split[0].equals("-delete")) {
             //Check if there is an entity at mouse click
 
             MacroCommand macro = parseDelete(split);
@@ -189,41 +210,64 @@ public class TerminalHandler {
                 CommandService.addCommand(macro, input);
                 CommandService.executeNext();
             }
-        } else if(split[0].equals("u")) {
-            //Undo
+        }
+        // undo
+        else if(split[0].equals("u")) {
             CommandService.undo();
-        } else if(split[0].equals("r")) {
-            //Redo
+        }
+        // redo
+        else if(split[0].equals("r")) {
             CommandService.redo();
-        } else if(split[0].equals("con_s")) {
+        }
+        // configure settings
+        else if(split[0].equals("con_s")) {
             parseConS(split);
-        } else if (split[0].equals("con_o")) {
+        }
+        // configure offset
+        else if (split[0].equals("con_o")) {
             parseConO(split);
-        } else if (split[0].equals("con_z")) {
+        }
+        // configure zoom
+        else if (split[0].equals("con_z")) {
             parseConZ(split);
-        } else if (split[0].equals("-macro")) {
+        }
+        // open macro
+        else if (split[0].equals("-macro")) {
             if (split[1].equals("open")) {
                 macroFlag = true;
                 isMacroMade = false;
-                //flaggedMacro = new MacroCommand(drawTo);
             }
             else System.err.println("Invalid Command");
-        } else if (split[0].charAt(0) == 'b') { // SO MAKE SURE NOTHING ELSE IS B
+        }
+        // brush settings
+        else if (split[0].charAt(0) == 'b') { // SO MAKE SURE NOTHING ELSE IS B
             parseBrush(input);
-        } else if (split[0].equals("save")) {
+        }
+        // save
+        else if (split[0].equals("save")) {
             Saver.saveToFilePath(drawTo, split[1]);
-        } else if (split[0].equals("load")) {
+        }
+        // load
+        else if (split[0].equals("load")) {
             Loader.loadOverride(split[1], this);
             graphicTo.requestRedraw();
         } else if (split[0].equals("clear")) {
             parseClear();
-        } else if (split[0].equals("new")) {
+        }
+        // new
+        else if (split[0].equals("new")) {
             parseNew(split);
-        } else if (split[0].equals("@player")) {
+        }
+        // set player
+        else if (split[0].equals("@player")) {
             parseAtPlayer(split);
-        } else if (split[0].equals("del")) {
+        }
+        // brush setting for delete
+        else if (split[0].equals("del")) {
             parseBrush(split[0]);
-        } else if (split[0].equals("toggleterm")) {
+        }
+        // toggles termianl display on/off
+        else if (split[0].equals("toggleterm")) {
             terminalTo.toggleTerminal();
         }
 
@@ -231,6 +275,10 @@ public class TerminalHandler {
 
     }
 
+    /**
+     * Parses New requests
+     * @param input String[] from parseString
+     */
     private void parseNew(String[] input) {
 
         try {
@@ -252,18 +300,30 @@ public class TerminalHandler {
         graphicTo.requestRedraw();
     }
 
+    /**
+     * Parses Clear requests
+     */
     private void parseClear() {
         drawTo.initLayers();
         graphicTo.requestRedraw();
     }
 
-
+    /**
+     * Parses place requests
+     * @param split String[] from parseString
+     * @return MacroCommand with Strings in it
+     */
     private MacroCommand parsePlace(String[] split) {
         MacroCommand macro = new MacroCommand(drawTo);
         macro.add(singlePlace(split));
         return macro;
     }
 
+    /**
+     * Returns a single place command
+     * @param split String[] from parseString
+     * @return PlaceCommand
+     */
     private Command singlePlace(String[] split) {
 
         split[1] = split[1].replace("[", "");
@@ -299,6 +359,11 @@ public class TerminalHandler {
         return new PlaceCommand(drawTo, layer, x, y, compType);
     }
 
+    /**
+     * Parses Delete requests
+     * @param split String[] from thingy
+     * @return MacroCommand of deletes
+     */
     private MacroCommand parseDelete(String[] split) {
         MacroCommand macro = new MacroCommand(drawTo);
 
@@ -309,6 +374,11 @@ public class TerminalHandler {
         return macro;
     }
 
+    /**
+     * ewooeoweoweweowoewoeo
+     * @param split
+     * @return
+     */
     private Command delete(String[] split) {
 
         if (drawTo.getActiveSet().containsKey(split[1])) {
@@ -318,6 +388,11 @@ public class TerminalHandler {
         }
     }
 
+    /**
+     * Makes a giant list of PlaceCommands all contained in one MacroCommand.
+     * @param split String[] from parseString
+     * @return MacroCommand
+     */
     private MacroCommand parseFill(String[] split) {
 
         split[1] = split[1].replace("[", "");
