@@ -6,57 +6,63 @@ import composition.Composition;
 import handler.TerminalHandler;
 
 import java.io.*;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Loader {
 
-    private Composition toWrite;
-    //private
+    private static Hashtable<String, String> terrainChars;
 
     public Loader() {
 
     }
 
-    public static void loadTest() {
-
-        BufferedReader br = null;
-        boolean loadSuccessful = false;
-        String pathName = "saves/LVL1.rag";
-
-        try {
-            File levelFile = new File(pathName);
-            br = new BufferedReader(new FileReader(levelFile));
-            loadSuccessful = true;
-        } catch (FileNotFoundException e) {
-            System.err.printf("%s || File Not Found\n", pathName);
-        }
-
-        if(loadSuccessful) {
-            System.err.printf("it worked... cool\n");
-
-            try {
-                br.close();
-            } catch (IOException e) {
-                System.err.printf("Some error w/ IO in filepath %s", pathName);
-            }
-        }
+    /**
+     * Initialises the loader.
+     */
+    private static void initLoader() {
+        initTerrainChars();
     }
 
-    public static void loadOverrideNew(String name, TerminalHandler writer) {
-        Hashtable<String, String> entities = new Hashtable<>();
-        entities.put(".", "(null)");
-        entities.put("F", "(floor)");
-        entities.put("P", "(platform)");
-        entities.put("S", "(spikes)");
-        entities.put("R", "(rocks)");
+    /**
+     * Assigns the characters in the terrainArray to meaningful (name)s the
+     * ragCmd will accept.
+     *
+     * If you wish to extend the types of entities that are loaded to the editor,
+     * you should add to this Hashtable.
+     *
+     * REM: remind john to make a single data structure for the saver and loader.
+     */
+    private static void initTerrainChars() {
+        Hashtable<String, String> terrainChars = new Hashtable<>();
 
+        terrainChars.put(".", "(null)");
+        terrainChars.put("F", "(floor)");
+        terrainChars.put("P", "(platform)");
+        terrainChars.put("S", "(spikes)");
+        terrainChars.put("R", "(rocks)");
+    }
+
+    /**
+     * Sends requests to the terminal handler to clear the current Composition,
+     * send config commands to title, set width and height, then fills out the composition
+     * with "-place" commands.
+     *
+     * REM: if you're reading this, remind John to split up "-place" and "-spawn"
+     * @param name name of the file to load
+     * @param writer TerminalHandler to send terminal commands to
+     */
+    public static void loadOverride(String name, TerminalHandler writer) {
+
+        initLoader();
+
+        // clears the composition
         writer.parseString("clear");
 
         String filepath = "source/core/assets/configs/rags/" + name + ".rag";
 
+        // encased in a try block in case the file cannot be loaded (this should
+        // be stopped by the Interface before this happens, tho... lets hope
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
 
             String line;
@@ -68,18 +74,24 @@ public class Loader {
             ArrayList<String> argsToRun = new ArrayList<>();
             int x = 0;
 
+            // this will read all the lines in the file until it reaches the end
             while ((line = br.readLine()) != null) {
+                // Ignores Empty Lines
                 if (line.length() == 0) {
                     continue;
                 }
 
+                // Ignores non-$ lines
                 if (line.charAt(0) != '$') {
-                    throw new IOException();
+                    continue; //to Dolan: accept non-$ lines for comments maybe?
+                    //throw new IOException();
                 }
 
+                // If both tests are passed, gets the specifier char (2nd char of line)
                 char specifier = line.charAt(1);
                 String delim = " ";
 
+                // yo Dolan thats clean
                 if (specifier == '#') {
                     delim = "";
                 }
@@ -87,6 +99,7 @@ public class Loader {
                 String[] args = line.substring(2).split(delim);
 
                 switch (specifier) {
+                    // '_' is a config line
                     case '_':
                         String config = args[0];
                         String value = args[1];
@@ -99,18 +112,18 @@ public class Loader {
                             try {
                                 width = Integer.parseInt(value);
                             } catch (NumberFormatException exception) {
-                                System.err.print("Could not parse width/height value");
+                                System.err.print("Could not parse width value");
                             }
                         } else if (config.equals("height")) {
                             try {
                                 height = Integer.parseInt(value);
                             } catch (NumberFormatException exception) {
-                                System.err.print("Could not parse width/height value");
+                                System.err.print("Could not parse height value");
                             }
                         }
 
                         break;
-
+                    // '#' is a terrainLayer line
                     case '#':
                         int y = 0;
 
@@ -118,7 +131,7 @@ public class Loader {
                             argsToRun.add(String.format("-place [%d,%d] %s"
                             , x
                             , y
-                            , entities.get(key)));
+                            , terrainChars.get(key)));
 
                             y++;
                         }
@@ -127,17 +140,13 @@ public class Loader {
 
                         break;
 
+                    // '@' is an "atEntity" line to set traits about specific ent
                     case '@':
                         argsToRun.add(String.format("@%s %s %s", args[0], args[1], args[2]));
                         break;
 
+                    // '-' is a "-place" for an active entity
                     case '-':
-
-                        //TO DOLAN:
-                        // the entites are saved from the game which indexes y going upscreen
-                        // so the whole height - y transformation has to happen forgot about that
-
-                        // fuck my liiiiiiife
 
                         String[] coOrdArgs = args[1].replace("[","").replace("]","")
                                                     .split(",");
@@ -152,8 +161,10 @@ public class Loader {
                 }
             }
 
+            // yoooo thats so clean
             argsToRun.add(0, String.format("new %s [%d,%d]", title, width, height));
 
+            // then just killem all
             for (String arg: argsToRun) {
                 writer.parseString(arg);
             }
@@ -162,83 +173,4 @@ public class Loader {
             System.err.print("Error loading file");
         }
     }
-
-    public static void loadOverride(String name, TerminalHandler writer) {
-
-        writer.parseString("clear");
-
-        String filepath = "source/core/assets/configs/rags/" + name + ".rag";
-
-        BufferedReader br = null;
-        boolean loadSuccessful = false;
-
-        try {
-            File levelFile = new File(filepath);
-            br = new BufferedReader(new FileReader(levelFile));
-            loadSuccessful = true;
-        } catch (FileNotFoundException e) {
-            System.err.printf("%s || File Not Found\n", filepath);
-        }
-        try {
-            if (loadSuccessful) {
-
-                String line;
-                float lane = 6.8f;
-
-                int i = 0;
-                while((line = br.readLine()) != null) {
-
-                    for (int j = 0; j < line.length(); j++) {
-
-                        int y = i;
-                        int x = j;
-                        String whatToPlace = null;
-
-                        switch(line.charAt(j)) {
-
-                            case ' ': //Empty
-                                whatToPlace = "(null)";
-                                break;
-                            case 'P': //Platform
-                                whatToPlace = "(platform)";
-                                break;
-                            case 'F': //Floor
-                                whatToPlace = "(floor)";
-                                break;
-                            /*case 'A': //Avatar (player)
-                                whatToPlace = "(player)";
-                                break;*/
-                            case 'S': //Spikes
-                                whatToPlace = "(spikes)";
-                                break;
-                            case 'R': //Rocks
-                                whatToPlace = "(rocks)";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (whatToPlace != null) {
-                            String toParse = String.format("-place [%d,%d] %s", x, y, whatToPlace);
-                            writer.parseString(toParse);
-                        }
-                    }
-                    i++;
-                }
-
-                CommandService.clearHistory();
-
-
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    System.err.printf("Some error w/ IO in filepath %s", filepath);
-                }
-            }
-        } catch (IOException e) {
-            System.err.printf("problem loading file, but u gotta deal with that");
-        }
-
-    }
-
 }

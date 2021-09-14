@@ -213,7 +213,7 @@ public class TerminalHandler {
         } else if (split[0].equals("save")) {
             Saver.saveToFilePath(drawTo, split[1]);
         } else if (split[0].equals("load")) {
-            Loader.loadOverrideNew(split[1], this);
+            Loader.loadOverride(split[1], this);
             graphicTo.requestRedraw();
         } else if (split[0].equals("clear")) {
             parseClear();

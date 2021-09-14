@@ -28,11 +28,9 @@ public class DeleteCommand extends Command {
     }
 
     public void execute() {
-
         drawTo.open();
         action();
         drawTo.close();
-
     }
 
     public void unexecute() {

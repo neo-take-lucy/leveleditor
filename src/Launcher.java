@@ -1,7 +1,5 @@
 import command.CommandService;
-import files.FileManager;
 import files.Loader;
-import files.Saver;
 import gui.Composer;
 import composition.Composition;
 import gui.Mouse;
@@ -58,7 +56,7 @@ public class Launcher {
         initMainPanel();
         terminalHandler.parseString("new default [10,10]");
 
-        Loader.loadOverrideNew("jacktest", terminalHandler);
+        Loader.loadOverride("jacktest", terminalHandler);
 
         //Saver.saveToFilePath(mainPaint, "test");
 
@@ -114,10 +112,5 @@ public class Launcher {
     private void initToolBox() {
         mainToolBox = new ToolBox(terminalHandler);
     }
-
-    private void loadTest() {
-        Loader.loadTest();
-    }
-
 
 }

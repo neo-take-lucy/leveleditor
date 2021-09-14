@@ -10,6 +10,10 @@ public class FileManager {
 
     private static LinkedList<String> validRags;
 
+    /**
+     * Makes a valid list of all the .rags in the rag configs/rags folder.
+     * This is called before any .rags are gotten or set.
+     */
     private static void makeValidList() {
         String[] pathNames;
         File f = new File(root);
@@ -25,6 +29,10 @@ public class FileManager {
 
     }
 
+    /**
+     * Returns a list of rags in the current folder.
+     * @return LinkedList<String></String> of yeh.
+     */
     public static LinkedList<String> getRags() {
         validRags = new LinkedList<>();
         makeValidList();
@@ -32,6 +40,11 @@ public class FileManager {
 
     }
 
+    /**
+     * Returns whether or not the rag is already in the directoy.
+     * @param rag rag trying to save.
+     * @return boolean value if the .rag trying to save is already in the .rag directoy.
+     */
     public static boolean isSaveFileInRags(String rag) {
 
         for(String fileInFolder : getRags()) {
