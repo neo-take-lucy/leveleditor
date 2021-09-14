@@ -4,6 +4,9 @@ import gui.Composer;
 
 import java.util.LinkedList;
 
+/**
+ * CommandService facilitates the recording of previous commands, undo and redo.
+ */
 public class CommandService {
 
     private static Composer window;
@@ -18,30 +21,26 @@ public class CommandService {
     static boolean isInHistory = false;
 
     //make sure to do this separate from makin em... if that makes sense... :^)
+
+    /**
+     * Adds a Command to the commandList. Keep in mind this doesn't execute it immediately,
+     * that is typically called *after* the command is added in the TerminalHandler.
+     * @param toAdd Command to add
+     * @param parsed a String to record
+     */
     public static void addCommand(Command toAdd, String parsed) {
 
+        // if the command is in history (i.e. mid-undo) it will clear the list,
+        // and add this command as the latest in the new list.
         if (isInHistory) {
-
-            //tempList = commandList.subList(0, commandIndex)
-
             commandList.subList(commandIndex, commandList.size()).clear();
             totalCommands = commandList.size();
             isInHistory = false;
         }
 
         commandList.addLast(new CmdnStr(toAdd, parsed));
-
         totalCommands++;
 
-        /*if(isInHistory) {
-            commands.subList(commandIndex, commands.size()).clear();
-            totalCommands = commands.size();
-            isInHistory = false;
-        }
-
-        commands.addLast(toAdd);
-        stringCommands.addLast()
-        totalCommands++;*/
     }
 
     public static int getCommandIndex() {
@@ -52,19 +51,11 @@ public class CommandService {
         window = mainComp;
     }
 
+    /**
+     * executeNext should be called statically by classes outside of the CommandService.
+     * It in tern only calls stepForward.
+     */
     public static void executeNext() {
-
-        /*for (CmdnStr c : commandList) {
-            System.out.println(c.getTerminalLine());
-        }*/
-
-        /*if (isInHistory) {
-            CmdnStr addback = commandList.peekLast();
-            commandList.subList(commandIndex, commandList.size()).clear();
-            commandList.addLast(addback);
-            isInHistory = false;
-        }*/
-
         stepForward();
     }
 
@@ -74,13 +65,12 @@ public class CommandService {
         }
     }
 
+    /**
+     * Undoes the previous command.
+     */
     public static void undo() {
 
-        isInHistory = true;
-
-        /*if (commandList.get(commandIndex).getTerminalLine().equals("-macro close")) {
-
-        }*/
+        isInHistory = true; // now in history, as undo has been called
 
         if(commandIndex == 0) {
             System.err.println("At earliest reversible command");
@@ -92,10 +82,15 @@ public class CommandService {
             commandList.get(commandIndex).unexecute();
         }
 
-        window.requestRedraw();
+        window.requestRedraw(); // this is required whenever the window updates.
     }
 
+    /**
+     * Steps the command list forward. Private method, public calls should be done to
+     * executeNext().
+     */
     private static void stepForward() {
+
         if (commandIndex == totalCommands) {
             System.err.println("At Latest Command, cannot execute further");
         } else if (commandIndex > totalCommands) {
@@ -106,6 +101,7 @@ public class CommandService {
             commandIndex++;
         }
 
+        // if was inhistoy, then not anymore :^)
         if (commandIndex == totalCommands) {
             isInHistory = false;
         }
@@ -113,6 +109,9 @@ public class CommandService {
         window.requestRedraw();
     }
 
+    /**
+     * Redoes the previous undo.
+     */
     public static void redo() {
         stepForward();
     }
@@ -126,6 +125,9 @@ public class CommandService {
         }
     }
 
+    /**
+     * Clears the undo history.
+     */
     public static void clearHistory() {
         commandList.clear();
         commandIndex = 0;
@@ -133,6 +135,9 @@ public class CommandService {
     }
 }
 
+/**
+ * This is a strange class used to model the command and the string...
+ */
 class CmdnStr {
 
     private Command toExecute;
