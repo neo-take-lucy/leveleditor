@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Hashtable;
 
+import static composition.BrushType.*;
+
 public class Saver {
 
     private static final String root = "source/core/assets/configs/rags/";
@@ -38,6 +40,7 @@ public class Saver {
             // gets the Terrain Layer and the Active Layer of the Composition
             BrushType[][] terrainLayer = toSave.getTerrainLayer();
             Hashtable<String, BrushType> activeLayer = toSave.getActiveSet();
+            Hashtable<String, BrushType> powerLayer = toSave.getPowerUpSet();
 
             // makes a string builder
             StringBuilder saveFile = new StringBuilder();
@@ -48,6 +51,7 @@ public class Saver {
             saveFile.append(makeTerrain(terrainLayer));
             saveFile.append(atPlayer(playerX, playerY));
             saveFile.append(listActiveEntities(activeLayer, width, height));
+            saveFile.append(listPowerUps(powerLayer, width, height));
             saveFile.append(getLevelTrigger(width));
 
             // makes a writer to the filepath
@@ -178,6 +182,50 @@ public class Saver {
         activeEntityList.append("\n");
 
         return activeEntityList.toString();
+    }
+
+    /**
+     * Makes the "-spawn"s String of the .rag
+     * @param powerList List of entiies in the Composition
+     * @param height Height to adjust ragEdit y value to RagnarokRacer y value
+     * @return String of "-" arguments
+     */
+    private static String listPowerUps(Hashtable<String, BrushType> powerList,
+                                int width, int height) {
+
+        StringBuilder powerUpsList = new StringBuilder();
+
+        for (String coOrd : powerList.keySet()) {
+
+            String powerUp = "";
+
+            switch (powerList.get(coOrd)) {
+                case LIGHTNING:
+                    powerUp = "(lightning)";
+                    break;
+                case SPEAR:
+                    powerUp = "(spear)";
+                    break;
+                case SHIELD:
+                    powerUp = "(shield)";
+                    break;
+            }
+
+            //convert current indexing into what RagnarokRacer expects (y = height - y - 1)
+            String coOrdTrim = coOrd.replace("[","").replace("]","");
+            int x = Integer.parseInt(coOrdTrim.split(",")[0]);
+            int y = height - Integer.parseInt(coOrdTrim.split(",")[1]) - 1;
+
+            coOrd = String.format("[%d,%d]", x, y);
+
+            String appendTo = String.format("$-spawn %s %s\n", coOrd, powerUp);
+            powerUpsList.append(appendTo);
+
+        }
+
+        powerUpsList.append("\n");
+
+        return powerUpsList.toString();
     }
 
     private static String getLevelTrigger(int width) {
