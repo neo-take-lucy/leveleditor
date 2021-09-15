@@ -1,17 +1,13 @@
 package gui;
 
 /**
- * A ridiculously monolithic list of subSpr coordinates
+ * A ridiculously monolithic list of subSpr coordinates.
+ *
+ * Each of these co-ordinates is the top left corner of the sub sprite on the sprite sheet.
+ * Most of these values are used in the BrushType class,
+ * but a select few (and only for config buttons) are used directly in the ToolBox class.
  */
 public enum SubSpr {
-
-    // current spritesheet
-    // eahc is 8, S in line 2 is spikes, in line 3 skeleton
-    // . is blank
-    // FP......
-    // RS......
-    // WS...de. (d)elete, (e)rase
-    // A.N.sln@ (s)ave, (l)oad, (n)ew, @ is palette
 
     NULL(16, 24),
     FLOOR(0, 0),

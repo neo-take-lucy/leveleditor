@@ -1,0 +1,26 @@
+NOTES FOR DOLAN, WINTON, LAUREN (15/9/21):
+Alright, firstly I haven't updated the Saver or Loader classes to parse the
+Power Ups, but I did write some stuff that places them on their own layer in
+Composition and draws them. So your first task will probs be to do that...
+I didn't do it honestly out of laziness...
+
+If you want layout fixes/changes let me know. The current system is soooo
+whack, it basically just works off a list of values and makes them sequentially,
+not exactly fine gui design.
+
+In terms of adding new Power Ups, that stuff I tried to simplify a lot.
+You will need to append to 3 enums for all the functionality:
+- BrushType
+- SubSpr
+- ActiveEntityButtons (located in the ToolBox class)
+
+BrushType is the real juicy one, make sure to set the layers right
+and use unique values for the "type" and "setting" arguments. Otherwise,
+if you implement correctly, it should work like a charm.
+
+SubSpr is used to get the top left corner of the sprite on the spritesheet.
+All sprites are 8x8 so the icon maker automatically gets all that stuff.
+
+ActiveEntityButtons will allow the user to set the brush setting from a button
+that represents the new PowerUp. This is purely graphical, and functionality will
+exist without this.

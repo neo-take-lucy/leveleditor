@@ -11,8 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Hashtable;
 
+/**
+ * Toolbox is used to create and model the selection of entities on the side of the screen. Yeah, this
+ * class is pretty poorly written. Probably a better method would be to store the buttons as lists of my own
+ * object class and that way they can be passed to a single constructor to make each pane but... this thing
+ * is due in like a week.
+ */
 public class ToolBox extends JPanel {
 
     private final int BUTTON_SIZE = 64;
@@ -140,6 +145,12 @@ public class ToolBox extends JPanel {
         terrainPanel = initTerrainPanel();
         activePanel = initActiveEntityPanel();
         zoomPanel = initZoomPanel();
+
+        Color bg = new Color(16774076);
+        configPanel.setBackground(bg);
+        terrainPanel.setBackground(bg);
+        activePanel.setBackground(bg);
+        zoomPanel.setBackground(bg);
 
         c.fill = GridBagConstraints.NONE;
 
@@ -480,6 +491,9 @@ public class ToolBox extends JPanel {
 
 }
 
+/**
+ * Enum representing the Configuration Buttons
+ */
 enum ConfigButtons {
 
     // in the () can make icon
@@ -517,6 +531,9 @@ enum ConfigButtons {
     }
 }
 
+/**
+ * Enum representing the Brush (Terrain Tile) Buttons
+ */
 enum BrushButtons {
 
     // in the () can make icon
@@ -553,6 +570,9 @@ enum BrushButtons {
     }
 }
 
+/**
+ * Enum representing the ActiveEntity (Active/PowerUp) Buttons
+ */
 enum ActiveEntityButtons {
 
     // in the () can make icon
@@ -590,13 +610,20 @@ enum ActiveEntityButtons {
     }
 }
 
+/**
+ * Enum representing the Zoom/Scroll Buttons
+ */
 enum ZoomScrollButtons {
 
         // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
     ARROW_LEFT("con_o -100 0", SubSpr.ARROW_LEFT),
-    ARROW_RIGHT("con_o 100 0", SubSpr.ARROW_RIGHT);
+    ARROW_RIGHT("con_o 100 0", SubSpr.ARROW_RIGHT),
+    ARROW_UP("con_o 0 -100", SubSpr.ARROW_UP),
+    ARROW_DOWN("con_o 0 100", SubSpr.ARROW_DOWN),
+    ZOOM_IN("con_z 10", SubSpr.ZOOM_IN),
+    ZOOM_OUT("con_z -10", SubSpr.ZOOM_OUT);
 
     private JButton butt;
     private String setting;

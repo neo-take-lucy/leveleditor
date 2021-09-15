@@ -51,6 +51,7 @@ public class Launcher {
         initToolBox();
 
         initMainPanel();
+
         terminalHandler.parseString("new default [10,10]");
 
         Loader.loadOverride("ragnorok", terminalHandler);
@@ -90,15 +91,15 @@ public class Launcher {
 
         mainPanel.add(mainCanvas, BorderLayout.CENTER);
         mainPanel.add(mainTextBox, BorderLayout.PAGE_END);
-
-        mainTextBox.setVisible(false);
-
         mainPanel.add(mainToolBox, BorderLayout.EAST);
 
         mainCanvas.graphicalSettings(35, 24, 20);
         mainWindow.setSize(mainCanvas.getResolution()[0], mainCanvas.getResolution()[1]);
         mainWindow.getContentPane().add(mainPanel);
 
+        mainPanel.setBackground(new Color(5260080));
+
+        mainTextBox.setVisible(false);
         mainWindow.setVisible(true);
 
     }
