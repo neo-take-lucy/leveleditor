@@ -559,10 +559,10 @@ enum ActiveEntityButtons {
 
     // maybe also save values relating to the coordinates in this?
     DELETE(BrushType.DELETE),
+    DELETE_POW(BrushType.DELETE_POW),
     SKELETON(BrushType.SKELETON),
     WOLF(BrushType.WOLF),
     FIRE_SPIRIT(BrushType.FIRE_SPIRIT),
-    DELETE_POW(BrushType.DELETE_POW),
     POWER_UP_1(BrushType.POWER_UP_1);
 
     private JButton butt;

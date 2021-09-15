@@ -41,9 +41,9 @@ public enum BrushType {
     DELETE(Layer.ACTIVE, "(delete)", "del", SubSpr.DELETE, Color.PINK),
     SKELETON(Layer.ACTIVE, "(skeleton)", "b s", SubSpr.SKELETON, Color.white),
     WOLF(Layer.ACTIVE, "(wolf)", "b w", SubSpr.WOLF, Color.darkGray),
-    FIRE_SPIRIT(Layer.ACTIVE, "(fireSpirit)", "b z", SubSpr.ARROW_DOWN, Color.BLUE),
+    FIRE_SPIRIT(Layer.ACTIVE, "(fireSpirit)", "b z", SubSpr.FIRE_SPIRIT, Color.BLUE),
 
-    DELETE_POW(Layer.POWER_UP, "(delPow)", "b pdel", SubSpr.DELETE, Color.PINK),
+    DELETE_POW(Layer.POWER_UP, "(delPow)", "b pdel", SubSpr.DELETE_POW, Color.PINK),
     POWER_UP_1(Layer.POWER_UP, "(pow1)", "b p1", SubSpr.ARROW_LEFT, Color.red);
 
     public Layer layer;
