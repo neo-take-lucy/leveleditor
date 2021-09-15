@@ -583,7 +583,9 @@ enum ActiveEntityButtons {
     SKELETON(BrushType.SKELETON),
     WOLF(BrushType.WOLF),
     FIRE_SPIRIT(BrushType.FIRE_SPIRIT),
-    POWER_UP_1(BrushType.POWER_UP_1);
+    LIGHTNING(BrushType.LIGHTNING),
+    SPEAR(BrushType.SPEAR),
+    SHIELD(BrushType.SHIELD);
 
     private JButton butt;
     private String setting;

@@ -44,7 +44,9 @@ public enum BrushType {
     FIRE_SPIRIT(Layer.ACTIVE, "(fireSpirit)", "b z", SubSpr.FIRE_SPIRIT, Color.BLUE),
 
     DELETE_POW(Layer.POWER_UP, "(delPow)", "b pdel", SubSpr.DELETE_POW, Color.PINK),
-    POWER_UP_1(Layer.POWER_UP, "(pow1)", "b p1", SubSpr.ARROW_LEFT, Color.red);
+    LIGHTNING(Layer.POWER_UP, "(pow1)", "b p1", SubSpr.ARROW_DOWN, Color.gray),
+    SPEAR(Layer.POWER_UP, "(pow2)", "b p2", SubSpr.ARROW_RIGHT, Color.YELLOW),
+    SHIELD(Layer.POWER_UP, "(pow3)", "b p3", SubSpr.ARROW_UP, Color.orange);
 
     public Layer layer;
     public String type;
