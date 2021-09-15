@@ -313,7 +313,7 @@ public class ToolBox extends JPanel {
         c.gridwidth = GRID_WIDTH;
         c.gridheight = 1;
 
-        activePanel.add(new JLabel("Enemies"), c);
+        activePanel.add(new JLabel("Enemies and Power Ups"), c);
 
         c.gridwidth = 1;
         c.gridheight = 1;
@@ -488,9 +488,9 @@ enum ConfigButtons {
     NEW(">new", SubSpr.NEW), // sets brush to null
     SAVE(">save", SubSpr.SAVE),
     LOAD(">load", SubSpr.LOAD),
+    TOGGLE_TERM(">toggleterm", SubSpr.TOGGLE_TERM),
     UNDO(">undo", SubSpr.UNDO),
-    REDO(">redo", SubSpr.REDO),
-    TOGGLE_TERM(">toggleterm", SubSpr.TOGGLE_TERM);
+    REDO(">redo", SubSpr.REDO);
 
     private JButton butt;
     private String setting;
@@ -560,7 +560,10 @@ enum ActiveEntityButtons {
     // maybe also save values relating to the coordinates in this?
     DELETE(BrushType.DELETE),
     SKELETON(BrushType.SKELETON),
-    WOLF(BrushType.WOLF);
+    WOLF(BrushType.WOLF),
+    FIRE_SPIRIT(BrushType.FIRE_SPIRIT),
+    DELETE_POW(BrushType.DELETE_POW),
+    POWER_UP_1(BrushType.POWER_UP_1);
 
     private JButton butt;
     private String setting;
