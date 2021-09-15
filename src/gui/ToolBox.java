@@ -201,6 +201,7 @@ public class ToolBox extends JPanel {
                     case ">load":
                         // open load dialog
                         file = getLoadDialog();
+                        if (file.equals("")) break;
                         handler.parseString("load " + file);
                         break;
                     case ">undo":

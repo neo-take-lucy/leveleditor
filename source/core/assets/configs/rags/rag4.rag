@@ -1,0 +1,76 @@
+$_title ragTitle
+$_width 53
+$_height 10
+
+$#.........F
+$#.........F
+$#..FFFF...F
+$#..P.P....F
+$#..SF.F...F
+$#.........F
+$#..SFFF...F
+$#..P.P....F
+$#..SFFF..RF
+$#........RF
+$#..SFF....F
+$#.RP..F...F
+$#.RP.PF...F
+$#....F....F
+$#.........F
+$#.SFFFF...F
+$#..RP.....F
+$#...RP...SF
+$#.SFFFF..SF
+$#.........F
+$#..SFF....F
+$#..P..F...F
+$#..P..F...F
+$#..SFF....F
+$#.........F
+$#.RFFFF...F
+$#..P.P....F
+$#..RF.F...F
+$#.........F
+$#...FF....F
+$#..P.SF...F
+$#..P.SF...F
+$#...FF....F
+$#.........F
+$#..FFFF...F
+$#....P....F
+$#..SPF....F
+$#.SP..F...F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+$#.........F
+
+$@player set [2,8]
+
+$-spawn [30,1] (skeleton)
+$-spawn [12,5] (skeleton)
+$-spawn [20,1] (skeleton)
+$-spawn [43,1] (skeleton)
+$-spawn [37,1] (skeleton)
+$-spawn [21,5] (skeleton)
+$-spawn [5,1] (fireSpirit)
+$-spawn [11,5] (skeleton)
+$-spawn [36,1] (skeleton)
+$-spawn [47,5] (levelTrigger)
+$-spawn [25,1] (skeleton)
+$-spawn [15,1] (skeleton)
+$-spawn [38,1] (skeleton)
+$-spawn [15,4] (wolf)
+$-spawn [22,5] (skeleton)
+

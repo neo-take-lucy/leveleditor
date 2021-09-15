@@ -1,5 +1,6 @@
 package command;
 
+import composition.BrushType;
 import composition.CompType;
 import composition.Composition;
 import composition.Layer;
@@ -9,9 +10,8 @@ public class PlaceCommand extends Command {
     private int x;
     private int y;
 
-    private Layer layer;
-    private CompType previousValue; //All paints/colours/enemies are model as enums
-    private CompType commandValue;
+    private BrushType previousValue; //All paints/colours/enemies are model as enums
+    private BrushType commandValue;
 
     /**
      * Places a cell at the specified location.
@@ -19,14 +19,13 @@ public class PlaceCommand extends Command {
      * background.
      * @param drawTo sets the composition to draw to.
      */
-    public PlaceCommand(Composition drawTo, Layer layer, int x, int y, CompType nextValue) {
+    public PlaceCommand(Composition drawTo, int x, int y, BrushType nextValue) {
         super(drawTo);
 
         this.x = x;
         this.y = y;
-        this.layer = layer;
 
-        this.previousValue = drawTo.getAtPoint(layer, x, y);
+        this.previousValue = drawTo.getAtPoint(nextValue.layer, x, y);
         this.commandValue = nextValue;
     }
 
@@ -43,11 +42,11 @@ public class PlaceCommand extends Command {
     }
 
     protected void action() {
-        drawTo.setAtLayer(layer, x, y, commandValue);
+        drawTo.setAtLayer(x, y, commandValue);
     }
 
     protected void reverseAction() {
-        drawTo.setAtLayer(layer, x, y, previousValue);
+        drawTo.setAtLayer(x, y, previousValue);
     }
 
 }

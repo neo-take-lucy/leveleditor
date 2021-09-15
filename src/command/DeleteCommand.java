@@ -1,5 +1,6 @@
 package command;
 
+import composition.BrushType;
 import composition.CompType;
 import composition.Composition;
 import composition.Layer;
@@ -11,7 +12,7 @@ public class DeleteCommand extends Command {
     private int y;
 
     private String stringCoOrds;
-    private CompType previousValue; //All paints/colours/enemies are model as enums
+    private BrushType previousValue; //All paints/colours/enemies are model as enums
 
     Hashtable<String, CompType> entities;
 

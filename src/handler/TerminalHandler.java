@@ -1,6 +1,7 @@
 package handler;
 
 import command.*;
+import composition.BrushType;
 import composition.CompType;
 import composition.Composition;
 import composition.Layer;
@@ -29,7 +30,7 @@ public class TerminalHandler {
     private JFrame canvasTo;
     private TerminalTextBox terminalTo;
 
-    private Hashtable<String, CompType> stringToValueEnum = new Hashtable<String, CompType>();
+    private Hashtable<String, BrushType> stringToValueEnum = new Hashtable<String, BrushType>();
 
     private boolean macroFlag;
     private boolean isMacroMade;
@@ -93,7 +94,13 @@ public class TerminalHandler {
     private void makeValidStringToEnum() {  // put this and the one in compose together in an enum,
                                             // store whats needed in smaller version, or just use
                                             // algoriddim to reference
-        stringToValueEnum.put("(null)", CompType.NULL);
+
+        for (BrushType b : BrushType.values()) {
+            stringToValueEnum.put(b.type, b);
+        }
+
+
+        /*stringToValueEnum.put("(null)", CompType.NULL);
         stringToValueEnum.put("(delete)", CompType.DELETE);
         stringToValueEnum.put("(floor)", CompType.FLOOR);
         stringToValueEnum.put("(platform)", CompType.PLATFORM);
@@ -103,7 +110,7 @@ public class TerminalHandler {
         stringToValueEnum.put("(skeleton)", CompType.SKELETON);
         stringToValueEnum.put("(wolf)", CompType.WOLF);
         stringToValueEnum.put("(fireSpirit)", CompType.FIRESPIRIT);
-        stringToValueEnum.put("(levelTrigger)", CompType.LEVELTRIGGER);
+        stringToValueEnum.put("(levelTrigger)", CompType.LEVELTRIGGER);*/
     }
 
     public void setComposition(Composition composition) {
@@ -349,22 +356,8 @@ public class TerminalHandler {
             return null;
         };
 
-        CompType compType = stringToValueEnum.get(split[2]);
-        Layer layer;
-        switch (compType) {
-            case SKELETON:
-            case WOLF:
-            case FIRESPIRIT:
-            case LEVELTRIGGER:
-                layer = Layer.ACTIVE;
-                break;
-            default:
-                layer = Layer.TERRAIN;
-        }
-
-        //System.err.printf("place called for %s on layer %s\n", split[2], layer.toString());
-
-        return new PlaceCommand(drawTo, layer, x, y, compType);
+        BrushType brushType = stringToValueEnum.get(split[2]);
+        return new PlaceCommand(drawTo, x, y, brushType);
     }
 
     /**
@@ -434,15 +427,7 @@ public class TerminalHandler {
             return null;
         };
 
-        CompType compType = stringToValueEnum.get(split[3]);
-        Layer layer;
-
-
-        /* TODO: fix this to make sense !!!!!!!!! */
-        switch (compType) {
-            default:
-                layer = Layer.TERRAIN;
-        }
+        BrushType brushType = stringToValueEnum.get(split[3]);
 
         MacroCommand macro = new MacroCommand(drawTo);
 
@@ -453,11 +438,9 @@ public class TerminalHandler {
         for (; sx < ex; sx++) {
             int sy = y;
             for (; sy < ey; sy++) {
-                macro.add(new PlaceCommand(drawTo, layer, sx, sy, compType));
+                macro.add(new PlaceCommand(drawTo, sx, sy, brushType));
             }
         }
-
-        //      -fill [2,2] [10,10] (wall)
 
         return macro;
 

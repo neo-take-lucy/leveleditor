@@ -1,5 +1,6 @@
 package gui;
 
+import composition.BrushType;
 import composition.CompType;
 import composition.Composition;
 
@@ -31,10 +32,9 @@ public class Composer extends JComponent {
     private boolean isSpriteMode = true;
 
     private Composition painting;
-    private Mouse mouse;
 
     private BufferedImage spriteSheet;
-    private Hashtable<CompType, BufferedImage> subSprites;
+    private Hashtable<BrushType, BufferedImage> subSprites;
 
     public Hashtable<String, String> brushSettings;   // this is consistent should should be more
                                                         // accessible
@@ -55,7 +55,6 @@ public class Composer extends JComponent {
 
         currentBrushSetting = brushSettings.get("b n");
 
-
     }
 
     /**
@@ -67,10 +66,10 @@ public class Composer extends JComponent {
 
         subSprites = new Hashtable<>();
 
-        for (CompType cT : CompType.values()) {
+        for (BrushType cT : BrushType.values()) {
 
-            int x = cT.getSubSprite().x;
-            int y = cT.getSubSprite().y;
+            int x = cT.subSpr.x;
+            int y = cT.subSpr.y;
 
             BufferedImage sprite = spriteSheet.getSubimage(x, y, 8, 8);
 
@@ -87,19 +86,10 @@ public class Composer extends JComponent {
     private void initBrushSettings() {
         brushSettings = new Hashtable<>();
 
-        // brush setting syntax: bi where i denotes a single character version
-        brushSettings.put("b n", "(null)");        // but fuck it
-        brushSettings.put("b d", "(delete)");
-        brushSettings.put("b f", "(floor)");
-        brushSettings.put("b p", "(platform)");
-        brushSettings.put("b a", "(player)"); // a for avatar
-        brushSettings.put("b v", "(spikes)"); // v look like spike
-        brushSettings.put("b r", "(rocks)");
-        brushSettings.put("b w", "(wolf)");
-        brushSettings.put("b s", "(skeleton)");
-        brushSettings.put("del", "(delete)");
-        brushSettings.put("b z", "(fireSpirit)");
-        brushSettings.put("b l", "(levelTrigger)");
+        for (BrushType b : BrushType.values()) {
+            brushSettings.put(b.brush, b.type);
+        }
+
     }
 
     public void setComposition(Composition grid) {
@@ -127,14 +117,15 @@ public class Composer extends JComponent {
         // won't paint if the painting stream is open... this is like some silly double-buffering
         // inspired data protection... i doubt it does anything
         if(!painting.isOpen()) {
-            CompType[][] terrainLayer = painting.getTerrainLayer();
-            Hashtable<String, CompType> activeSet = painting.getActiveSet();
+            BrushType[][] terrainLayer = painting.getTerrainLayer();
+            Hashtable<String, BrushType> activeSet = painting.getActiveSet();
+            Hashtable<String, BrushType> powerUpSet = painting.getPowerUpSet();
 
             // draws the terrain
             int x = 0;
-            for (CompType[] column : terrainLayer) {
+            for (BrushType[] column : terrainLayer) {
                 int y = 0;
-                for (CompType terrainAt : column) {
+                for (BrushType terrainAt : column) {
 
                     int drawX = x * P_SCALE + halfEmb - OFFSET_HOZ;
                     int drawY = y * P_SCALE + halfEmb - OFFSET_VERT;
@@ -143,7 +134,7 @@ public class Composer extends JComponent {
                     if (isSpriteMode) {
                         g.drawImage(subSprites.get(terrainAt), drawX, drawY, P_SCALE, P_SCALE, null);
                     } else {
-                        g.setColor(terrainAt.getColor());
+                        g.setColor(terrainAt.color);
                         g.fillRect( drawX,
                                 drawY,
                                 P_SCALE, P_SCALE);
@@ -167,7 +158,7 @@ public class Composer extends JComponent {
                 if (isSpriteMode) {
                     g.drawImage(subSprites.get(activeSet.get(coOrd)), drawX, drawY, P_SCALE, P_SCALE, null);
                 } else {
-                    g.setColor(activeSet.get(coOrd).getColor());
+                    g.setColor(activeSet.get(coOrd).color);
                     g.fillRect(drawX,
                             drawY,
                             P_SCALE, P_SCALE);
@@ -184,9 +175,9 @@ public class Composer extends JComponent {
             int drawY = py * P_SCALE + halfEmb - OFFSET_VERT;
 
             if (isSpriteMode) {
-                g.drawImage(subSprites.get(CompType.PLAYER), drawX, drawY, P_SCALE, P_SCALE, null);
+                g.drawImage(subSprites.get(BrushType.PLAYER), drawX, drawY, P_SCALE, P_SCALE, null);
             } else {
-                g.setColor(CompType.PLAYER.getColor());
+                g.setColor(BrushType.PLAYER.color);
                 g.fillRect(drawX,
                         drawY,
                         P_SCALE, P_SCALE);

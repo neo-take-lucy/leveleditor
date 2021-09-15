@@ -1,5 +1,6 @@
 package files;
 
+import composition.BrushType;
 import composition.CompType;
 import composition.Composition;
 
@@ -38,8 +39,8 @@ public class Saver {
             int playerY = height - toSave.getPlayer()[1] - 1;
 
             // gets the Terrain Layer and the Active Layer of the Composition
-            CompType[][] terrainLayer = toSave.getTerrainLayer();
-            Hashtable<String, CompType> activeLayer = toSave.getActiveSet();
+            BrushType[][] terrainLayer = toSave.getTerrainLayer();
+            Hashtable<String, BrushType> activeLayer = toSave.getActiveSet();
 
             // makes a string builder
             StringBuilder saveFile = new StringBuilder();
@@ -50,6 +51,7 @@ public class Saver {
             saveFile.append(makeTerrain(terrainLayer));
             saveFile.append(atPlayer(playerX, playerY));
             saveFile.append(listActiveEntities(activeLayer, width, height));
+            saveFile.append(getLevelTrigger(width));
 
             // makes a writer to the filepath
             writer = new BufferedWriter(new FileWriter(writingTo));
@@ -87,15 +89,15 @@ public class Saver {
      * @param terrainLayer terrainLayer of rag
      * @return String of "#" arguments
      */
-    private static String makeTerrain(CompType[][] terrainLayer) {
+    private static String makeTerrain(BrushType[][] terrainLayer) {
 
         StringBuilder terrainArray = new StringBuilder();
 
-        for (CompType[] column : terrainLayer) {
+        for (BrushType[] column : terrainLayer) {
 
             StringBuilder colString = new StringBuilder("$#");
 
-            for (CompType terrainAt : column) {
+            for (BrushType terrainAt : column) {
                 switch (terrainAt) {
 
                     case FLOOR:
@@ -144,7 +146,7 @@ public class Saver {
      * @param height Height to adjust ragEdit y value to RagnarokRacer y value
      * @return String of "-" arguments
      */
-    private static String listActiveEntities(Hashtable<String, CompType> entList, int width, int height) {
+    private static String listActiveEntities(Hashtable<String, BrushType> entList, int width, int height) {
 
         StringBuilder activeEntityList = new StringBuilder();
 
@@ -159,11 +161,8 @@ public class Saver {
                 case WOLF:
                     entityType = "(wolf)";
                     break;
-                case FIRESPIRIT:
+                case FIRE_SPIRIT:
                     entityType = "(fireSpirit)";
-                    break;
-                case LEVELTRIGGER:
-                    entityType = "(levelTrigger)";
                     break;
             }
 
@@ -178,8 +177,6 @@ public class Saver {
             activeEntityList.append(appendTo);
 
         }
-
-        activeEntityList.append(getLevelTrigger(width));
 
         activeEntityList.append("\n");
 

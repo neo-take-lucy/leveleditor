@@ -7,8 +7,12 @@ import java.util.Hashtable;
 
 public class Composition {
 
-    private CompType[][] terrainLayer;
-    private Hashtable<String, CompType> activeSet;
+    //private CompType[][] terrainLayer;
+    //private Hashtable<String, CompType> activeSet;
+
+    private BrushType[][] terrainLayer;
+    private Hashtable<String, BrushType> activeSet;
+    private Hashtable<String, BrushType> powerUpSet;
 
     private String title;
     private int width;
@@ -55,14 +59,14 @@ public class Composition {
     }
 
     public void initLayers() {
-        terrainLayer = new CompType[width][height];
+        terrainLayer = new BrushType[width][height];
         activeSet = new Hashtable<>();
 
         isOpen = false;
 
         for(int tx = 0; tx < width; tx++) {
             for(int ty = 0; ty < height; ty++) {
-                terrainLayer[tx][ty] = CompType.NULL;
+                terrainLayer[tx][ty] = BrushType.NULL;
             }
         }
     }
@@ -98,14 +102,15 @@ public class Composition {
 
     /**
      * Sets at the layer and coordinate specified the value.
-     * @param layer Which Layer to set at
      * @param x the x value
      * @param y the y value
      * @param value the CompType to place at value (i.e. NULL, FLOOR)
      */
-    public void setAtLayer(Layer layer, int x, int y, CompType value) {
+    public void setAtLayer(int x, int y, BrushType value) {
 
         boolean inBounds;
+
+        Layer layer = value.layer;
 
         if( x < 0 || x >= width || y < 0 || y >= height) {
             inBounds = false;
@@ -138,10 +143,10 @@ public class Composition {
      * @param y y value
      * @return CompType at specified point
      */
-    public CompType getAtPoint(Layer layer, int x, int y) {
+    public BrushType getAtPoint(Layer layer, int x, int y) {
 
         if(x < 0 || x >= width || y < 0 || y >= height) {
-            return CompType.NULL;
+            return BrushType.NULL;
         }
 
         if(!isOpen) {
@@ -163,7 +168,7 @@ public class Composition {
      * Returns the terrain layer (for Composer)
      * @return Layer that models terrain
      */
-    public CompType[][] getTerrainLayer() {
+    public BrushType[][] getTerrainLayer() {
         if(!isOpen) {
             return terrainLayer;
         } else {
@@ -177,7 +182,7 @@ public class Composition {
      * Returns the active later (for Composer)
      * @return Layer that models "active" entities
      */
-    public Hashtable<String, CompType> getActiveSet() {
+    public Hashtable<String, BrushType> getActiveSet() {
         if(!isOpen) {
             return activeSet;
         } else {
@@ -187,20 +192,22 @@ public class Composition {
         return null;
     }
 
-    public void setActiveSet(Hashtable<String, CompType> activeSet) {
-        this.activeSet = activeSet;
+    public Hashtable<String, BrushType> getPowerUpSet() {
+        if (!isOpen) {
+            return powerUpSet;
+        } else {
+            System.err.println("Tried to getPowerUpSet w/out Closing");
+        }
+
+        return null;
     }
 
     public void deleteEntity(String hashKey) {
-
         this.activeSet.remove(hashKey);
-
     }
 
-    public void replaceEntity(String hashKey, CompType value) {
-
+    public void replaceEntity(String hashKey, BrushType value) {
         this.activeSet.put(hashKey, value);
-
     }
 
     public void setPlayerLocation(int x, int y) {
