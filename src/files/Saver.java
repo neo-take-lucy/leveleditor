@@ -49,7 +49,7 @@ public class Saver {
             saveFile.append(makeConfig(title, width, height));
             saveFile.append(makeTerrain(terrainLayer));
             saveFile.append(atPlayer(playerX, playerY));
-            saveFile.append(listActiveEntities(activeLayer, height));
+            saveFile.append(listActiveEntities(activeLayer, width, height));
 
             // makes a writer to the filepath
             writer = new BufferedWriter(new FileWriter(writingTo));
@@ -144,7 +144,7 @@ public class Saver {
      * @param height Height to adjust ragEdit y value to RagnarokRacer y value
      * @return String of "-" arguments
      */
-    private static String listActiveEntities(Hashtable<String, CompType> entList, int height) {
+    private static String listActiveEntities(Hashtable<String, CompType> entList, int width, int height) {
 
         StringBuilder activeEntityList = new StringBuilder();
 
@@ -158,6 +158,12 @@ public class Saver {
                     break;
                 case WOLF:
                     entityType = "(wolf)";
+                    break;
+                case FIRESPIRIT:
+                    entityType = "(fireSpirit)";
+                    break;
+                case LEVELTRIGGER:
+                    entityType = "(levelTrigger)";
                     break;
             }
 
@@ -173,8 +179,19 @@ public class Saver {
 
         }
 
+        activeEntityList.append(getLevelTrigger(width));
+
         activeEntityList.append("\n");
 
         return activeEntityList.toString();
+    }
+
+    private static String getLevelTrigger(int width) {
+
+        String coOrd = String.format("[%d,%d]", width - 5, 5);
+        String appendTo = String.format("$-spawn %s %s\n", coOrd, "(levelTrigger)");
+
+        return appendTo;
+
     }
 }

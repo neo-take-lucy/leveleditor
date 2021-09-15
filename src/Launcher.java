@@ -53,7 +53,7 @@ public class Launcher {
         initMainPanel();
         terminalHandler.parseString("new default [10,10]");
 
-        Loader.loadOverride("jacktest", terminalHandler);
+        Loader.loadOverride("ragnorok", terminalHandler);
 
     }
 

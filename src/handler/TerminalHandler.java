@@ -57,7 +57,6 @@ public class TerminalHandler {
         validCommands.put("-macro", 2);     //-macro ("open"/"close")
         validCommands.put("-resize", 3);    //-resize [width/height] (anchor)
 
-        validCommands.put("new", 3);        //new (name) [width/height]
         validCommands.put("u", 1);          //u
         validCommands.put("r", 1);          //r
 
@@ -70,6 +69,7 @@ public class TerminalHandler {
         validCommands.put("b", 2);          //b colour          REM: brush
         validCommands.put("del", 1);        //delete            REM: sets the mouse to delete mode (activeEntites)
 
+        validCommands.put("new", 3);        //new (name) [width/height]
         validCommands.put("save", 2);       //save filename     REM: more args?
         validCommands.put("load", 2);       //load filename
 
@@ -102,6 +102,8 @@ public class TerminalHandler {
         stringToValueEnum.put("(wall)", CompType.WALL);
         stringToValueEnum.put("(skeleton)", CompType.SKELETON);
         stringToValueEnum.put("(wolf)", CompType.WOLF);
+        stringToValueEnum.put("(fireSpirit)", CompType.FIRESPIRIT);
+        stringToValueEnum.put("(levelTrigger)", CompType.LEVELTRIGGER);
     }
 
     public void setComposition(Composition composition) {
@@ -251,7 +253,9 @@ public class TerminalHandler {
         else if (split[0].equals("load")) {
             Loader.loadOverride(split[1], this);
             graphicTo.requestRedraw();
-        } else if (split[0].equals("clear")) {
+        }
+        // clear composition
+        else if (split[0].equals("clear")) {
             parseClear();
         }
         // new
@@ -350,11 +354,15 @@ public class TerminalHandler {
         switch (compType) {
             case SKELETON:
             case WOLF:
+            case FIRESPIRIT:
+            case LEVELTRIGGER:
                 layer = Layer.ACTIVE;
                 break;
             default:
                 layer = Layer.TERRAIN;
         }
+
+        //System.err.printf("place called for %s on layer %s\n", split[2], layer.toString());
 
         return new PlaceCommand(drawTo, layer, x, y, compType);
     }

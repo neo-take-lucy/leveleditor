@@ -14,7 +14,9 @@ public enum CompType {
     PLAYER(Color.green, SubSpr.PLAYER),
     SPIKES(Color.gray, SubSpr.SPIKES),
     SKELETON(Color.white, SubSpr.SKELETON),
-    WOLF(Color.darkGray, SubSpr.WOLF);
+    WOLF(Color.darkGray, SubSpr.WOLF),
+    LEVELTRIGGER(Color.BLUE, SubSpr.ARROW_UP),
+    FIRESPIRIT(Color.BLUE, SubSpr.ARROW_DOWN);
 
     private Color color;
     private SubSpr subSprite;

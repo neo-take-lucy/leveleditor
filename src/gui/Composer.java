@@ -98,6 +98,8 @@ public class Composer extends JComponent {
         brushSettings.put("b w", "(wolf)");
         brushSettings.put("b s", "(skeleton)");
         brushSettings.put("del", "(delete)");
+        brushSettings.put("b z", "(fireSpirit)");
+        brushSettings.put("b l", "(levelTrigger)");
     }
 
     public void setComposition(Composition grid) {

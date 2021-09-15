@@ -76,6 +76,7 @@ public class Loader {
 
             // this will read all the lines in the file until it reaches the end
             while ((line = br.readLine()) != null) {
+                //System.err.println("parsing line " + line);
                 // Ignores Empty Lines
                 if (line.length() == 0) {
                     continue;
@@ -148,6 +149,8 @@ public class Loader {
                     // '-' is a "-place" for an active entity
                     case '-':
 
+                        if (args[2].equals("(levelTrigger)")) break;
+
                         String[] coOrdArgs = args[1].replace("[","").replace("]","")
                                                     .split(",");
 
@@ -170,7 +173,7 @@ public class Loader {
             }
 
         } catch (IOException e) {
-            System.err.print("Error loading file");
+            System.err.print("Error loading file in Loader");
         }
     }
 }
