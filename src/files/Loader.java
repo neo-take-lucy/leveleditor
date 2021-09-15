@@ -1,8 +1,5 @@
 package files;
 
-import command.CommandService;
-import composition.CompType;
-import composition.Composition;
 import handler.TerminalHandler;
 
 import java.io.*;

@@ -2,5 +2,6 @@ package composition;
 
 public enum Layer {
     TERRAIN,
-    ACTIVE;
+    ACTIVE,
+    POWER_UP;
 }

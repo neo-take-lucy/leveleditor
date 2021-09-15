@@ -2,9 +2,7 @@ package handler;
 
 import command.*;
 import composition.BrushType;
-import composition.CompType;
 import composition.Composition;
-import composition.Layer;
 import files.Loader;
 import files.Saver;
 import gui.Composer;
@@ -94,23 +92,9 @@ public class TerminalHandler {
     private void makeValidStringToEnum() {  // put this and the one in compose together in an enum,
                                             // store whats needed in smaller version, or just use
                                             // algoriddim to reference
-
         for (BrushType b : BrushType.values()) {
             stringToValueEnum.put(b.type, b);
         }
-
-
-        /*stringToValueEnum.put("(null)", CompType.NULL);
-        stringToValueEnum.put("(delete)", CompType.DELETE);
-        stringToValueEnum.put("(floor)", CompType.FLOOR);
-        stringToValueEnum.put("(platform)", CompType.PLATFORM);
-        stringToValueEnum.put("(spikes)", CompType.SPIKES);
-        stringToValueEnum.put("(rocks)", CompType.ROCKS);
-        stringToValueEnum.put("(wall)", CompType.WALL);
-        stringToValueEnum.put("(skeleton)", CompType.SKELETON);
-        stringToValueEnum.put("(wolf)", CompType.WOLF);
-        stringToValueEnum.put("(fireSpirit)", CompType.FIRESPIRIT);
-        stringToValueEnum.put("(levelTrigger)", CompType.LEVELTRIGGER);*/
     }
 
     public void setComposition(Composition composition) {

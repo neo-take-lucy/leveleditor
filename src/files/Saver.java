@@ -1,15 +1,12 @@
 package files;
 
 import composition.BrushType;
-import composition.CompType;
 import composition.Composition;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 public class Saver {
 

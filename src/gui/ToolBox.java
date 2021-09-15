@@ -1,6 +1,6 @@
 package gui;
 
-import composition.CompType;
+import composition.BrushType;
 import files.FileManager;
 import handler.TerminalHandler;
 
@@ -16,6 +16,8 @@ import java.util.Hashtable;
 public class ToolBox extends JPanel {
 
     private final int BUTTON_SIZE = 64;
+    private final float BUTTON_SCALE = 0.63f;
+    private final int GRID_WIDTH = 4;
 
     private JPanel configPanel;
     private ActionListener configListener;
@@ -29,7 +31,6 @@ public class ToolBox extends JPanel {
     private TerminalHandler handler;
 
     private BufferedImage spriteSheet;
-    private Hashtable<String, BufferedImage> icons;
 
     private GridLayout grid;
     private GridBagConstraints c;
@@ -40,16 +41,8 @@ public class ToolBox extends JPanel {
 
         this.handler = handler;
 
-        //GridLayout grid = new GridLayout(10, 2);
-        //grid.s
-        //this.setPreferredSize();
-
-
         initMainPanel();
         initIcons();
-
-        //JButton coolButt = new JButton();
-        //this.add(coolButt);
 
     }
 
@@ -61,8 +54,7 @@ public class ToolBox extends JPanel {
             System.err.print("Couldn't load spritesheet. Check: in configs/ragEditAssets/spritesheet.png\n");
         }
 
-        icons = new Hashtable<>();
-
+        // Initialses the SubSpr icons of the ConfigButtons
         for (ConfigButtons cB : ConfigButtons.values()) {
 
             SubSpr sS = cB.getSubSprite();
@@ -71,13 +63,14 @@ public class ToolBox extends JPanel {
             int y = sS.y;
 
             Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
-                    .getScaledInstance((int) (BUTTON_SIZE * 0.75), (int) (BUTTON_SIZE * 0.75), Image.SCALE_FAST);
+                    .getScaledInstance((int) (BUTTON_SIZE * BUTTON_SCALE),
+                            (int) (BUTTON_SIZE * BUTTON_SCALE),
+                            Image.SCALE_FAST);
             Icon buttonIcon = new ImageIcon(sprite);
 
             cB.getButton().setIcon(buttonIcon);
             cB.getButton().setBorderPainted(false);
 
-            //subSprites.put(cT, sprite);
         }
 
         for (BrushButtons bB : BrushButtons.values()) {
@@ -88,13 +81,13 @@ public class ToolBox extends JPanel {
             int y = sS.y;
 
             Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
-                    .getScaledInstance((int) (BUTTON_SIZE * 0.75), (int) (BUTTON_SIZE * 0.75), Image.SCALE_FAST);
+                    .getScaledInstance((int) (BUTTON_SIZE * BUTTON_SCALE),
+                            (int) (BUTTON_SIZE * BUTTON_SCALE),
+                            Image.SCALE_FAST);
             Icon buttonIcon = new ImageIcon(sprite);
 
             bB.getButton().setIcon(buttonIcon);
             bB.getButton().setBorderPainted(false);
-
-            //subSprites.put(cT, sprite);
         }
 
         for (ActiveEntityButtons aB : ActiveEntityButtons.values()) {
@@ -105,7 +98,9 @@ public class ToolBox extends JPanel {
             int y = sS.y;
 
             Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
-                    .getScaledInstance((int) (BUTTON_SIZE * 0.75), (int) (BUTTON_SIZE * 0.75), Image.SCALE_FAST);
+                    .getScaledInstance((int) (BUTTON_SIZE * BUTTON_SCALE),
+                            (int) (BUTTON_SIZE * BUTTON_SCALE),
+                            Image.SCALE_FAST);
             Icon buttonIcon = new ImageIcon(sprite);
 
             aB.getButton().setIcon(buttonIcon);
@@ -122,13 +117,14 @@ public class ToolBox extends JPanel {
             int y = sS.y;
 
             Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
-                    .getScaledInstance((int) (BUTTON_SIZE * 0.75), (int) (BUTTON_SIZE * 0.75), Image.SCALE_FAST);
+                    .getScaledInstance((int) (BUTTON_SIZE * BUTTON_SCALE),
+                            (int) (BUTTON_SIZE * BUTTON_SCALE),
+                            Image.SCALE_FAST);
             Icon buttonIcon = new ImageIcon(sprite);
 
             zB.getButton().setIcon(buttonIcon);
             zB.getButton().setBorderPainted(false);
 
-            //subSprites.put(cT, sprite);
         }
 
     }
@@ -152,10 +148,6 @@ public class ToolBox extends JPanel {
         this.add(activePanel, c);
         this.add(zoomPanel, c);
 
-        //grid.layoutContainer(this);
-
-        //this.validate();
-
     }
 
     private JPanel initConfigPanel() {
@@ -165,14 +157,14 @@ public class ToolBox extends JPanel {
         // undo, redo
 
         configPanel = new JPanel(new GridBagLayout());
-        configPanel.setPreferredSize(new Dimension(BUTTON_SIZE * 3, BUTTON_SIZE * 3));
+        configPanel.setPreferredSize(new Dimension(BUTTON_SIZE * 2, BUTTON_SIZE * 3));
         GridBagConstraints c = new GridBagConstraints();
 
         //Make the Label
         c.fill = GridBagConstraints.CENTER;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 3;
+        c.gridwidth = GRID_WIDTH;
         c.gridheight = 1;
 
         configPanel.add(new JLabel("Configure"), c);
@@ -216,14 +208,6 @@ public class ToolBox extends JPanel {
                         handler.parseString("toggleterm");
                         break;
                 }
-
-                /*NEW(new JButton(), ">new"), // sets brush to null
-                        SAVE(new JButton(), ">save"),
-                        LOAD(new JButton(), ">load"),
-                        UNDO(new JButton(), ">undo"),
-                        REDO(new JButton(), ">redo"),
-                        TOGGLETERM(new JButton(), ">toggleTerm");*/
-
             }
         };
 
@@ -231,10 +215,10 @@ public class ToolBox extends JPanel {
         c.gridheight = 1;
 
         //Make the Buttons and Put Them In
-        int i = 3;
+        int i = GRID_WIDTH;
         for (ConfigButtons b : ConfigButtons.values()) {
-            int y = i / 3;
-            int x = i % 3;
+            int y = i / GRID_WIDTH;
+            int x = i % GRID_WIDTH;
 
             //System.out.printf("%s: grid x %d grid y %d\n", b.toString(), x, y);
 
@@ -271,7 +255,7 @@ public class ToolBox extends JPanel {
         c.fill = GridBagConstraints.CENTER;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 3;
+        c.gridwidth = GRID_WIDTH;
         c.gridheight = 1;
 
         terrainPanel.add(new JLabel("Terrain Brushes"), c);
@@ -288,10 +272,10 @@ public class ToolBox extends JPanel {
         c.gridheight = 1;
 
         //Make the Buttons and Put Them In
-        int i = 3;
+        int i = GRID_WIDTH;
         for (BrushButtons b : BrushButtons.values()) {
-            int y = i / 3;
-            int x = i % 3;
+            int y = i / GRID_WIDTH;
+            int x = i % GRID_WIDTH;
 
             //System.out.printf("%s: grid x %d grid y %d\n", b.toString(), x, y);
 
@@ -326,7 +310,7 @@ public class ToolBox extends JPanel {
         c.fill = GridBagConstraints.CENTER;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 3;
+        c.gridwidth = GRID_WIDTH;
         c.gridheight = 1;
 
         activePanel.add(new JLabel("Enemies"), c);
@@ -335,10 +319,10 @@ public class ToolBox extends JPanel {
         c.gridheight = 1;
 
         //Make the Buttons and Put Them In
-        int i = 3;
+        int i = GRID_WIDTH;
         for (ActiveEntityButtons b : ActiveEntityButtons.values()) {
-            int y = i / 3;
-            int x = i % 3;
+            int y = i / GRID_WIDTH;
+            int x = i % GRID_WIDTH;
 
             //b.getButton().setText(b.toString());
             b.getButton().addActionListener(brushListener);
@@ -376,10 +360,10 @@ public class ToolBox extends JPanel {
         c.gridheight = 1;
 
         //Make the Buttons and Put Them In
-        int i = 3;
+        int i = GRID_WIDTH;
         for (ZoomScrollButtons b : ZoomScrollButtons.values()) {
-            int y = i / 3;
-            int x = i % 3;
+            int y = i / GRID_WIDTH;
+            int x = i % GRID_WIDTH;
 
             //b.getButton().setText(b.toString());
             b.getButton().addActionListener(brushListener);
@@ -501,20 +485,20 @@ enum ConfigButtons {
     // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    NEW(new JButton(), ">new", SubSpr.NEW), // sets brush to null
-    SAVE(new JButton(), ">save", SubSpr.SAVE),
-    LOAD(new JButton(), ">load", SubSpr.LOAD),
-    UNDO(new JButton(), ">undo", SubSpr.UNDO),
-    REDO(new JButton(), ">redo", SubSpr.REDO),
-    TOGGLE_TERM(new JButton(), ">toggleterm", SubSpr.TOGGLE_TERM);
+    NEW(">new", SubSpr.NEW), // sets brush to null
+    SAVE(">save", SubSpr.SAVE),
+    LOAD(">load", SubSpr.LOAD),
+    UNDO(">undo", SubSpr.UNDO),
+    REDO(">redo", SubSpr.REDO),
+    TOGGLE_TERM(">toggleterm", SubSpr.TOGGLE_TERM);
 
     private JButton butt;
     private String setting;
     private SubSpr subSprite;
 
-    ConfigButtons(JButton button, String configSetting, SubSpr ss) {
+    ConfigButtons(String configSetting, SubSpr ss) {
 
-        butt = button;
+        butt = new JButton();
         setting = configSetting;
         subSprite = ss;
 
@@ -538,21 +522,21 @@ enum BrushButtons {
     // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    ERASER(new JButton(), "b n", SubSpr.ERASE), // sets brush to null
-    FLOOR(new JButton(), "b f", SubSpr.FLOOR),
-    PLATFORM(new JButton(), "b p", SubSpr.PLATFORM),
-    ROCKS(new JButton(), "b r", SubSpr.ROCK),
-    SPIKES(new JButton(), "b v", SubSpr.SPIKES);
+    ERASER(BrushType.ERASER), // sets brush to null
+    FLOOR(BrushType.FLOOR),
+    PLATFORM(BrushType.PLATFORM),
+    ROCKS(BrushType.ROCKS),
+    SPIKES(BrushType.SPIKES);
 
     private JButton butt;
     private String setting;
     private SubSpr subSprite;
 
-    BrushButtons(JButton button, String brushSetting, SubSpr ss) {
+    BrushButtons(BrushType brushType) {
 
-        butt = button;
-        setting = brushSetting;
-        subSprite = ss;
+        butt = new JButton();
+        setting = brushType.brush;
+        subSprite = brushType.subSpr;
 
     }
 
@@ -574,19 +558,19 @@ enum ActiveEntityButtons {
     // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    DELETE(new JButton(), "del", SubSpr.DELETE),
-    SKELETON(new JButton(), "b s", SubSpr.SKELETON),
-    WOLF(new JButton(), "b w", SubSpr.WOLF);
+    DELETE(BrushType.DELETE),
+    SKELETON(BrushType.SKELETON),
+    WOLF(BrushType.WOLF);
 
     private JButton butt;
     private String setting;
     private SubSpr subSprite;
 
-    ActiveEntityButtons(JButton button, String brushSetting, SubSpr ss) {
+    ActiveEntityButtons(BrushType brushType) {
 
-        butt = button;
-        setting = brushSetting;
-        subSprite = ss;
+        butt = new JButton();
+        setting = brushType.brush;
+        subSprite = brushType.subSpr;
 
     }
 
@@ -608,16 +592,16 @@ enum ZoomScrollButtons {
         // in the () can make icon
 
     // maybe also save values relating to the coordinates in this?
-    ARROW_LEFT(new JButton(), "con_o -100 0", SubSpr.ARROW_LEFT),
-    ARROW_RIGHT(new JButton(), "con_o 100 0", SubSpr.ARROW_RIGHT);
+    ARROW_LEFT("con_o -100 0", SubSpr.ARROW_LEFT),
+    ARROW_RIGHT("con_o 100 0", SubSpr.ARROW_RIGHT);
 
     private JButton butt;
     private String setting;
     private SubSpr subSprite;
 
-    ZoomScrollButtons(JButton button, String brushSetting, SubSpr ss) {
+    ZoomScrollButtons(String brushSetting, SubSpr ss) {
 
-        butt = button;
+        butt = new JButton();
         setting = brushSetting;
         subSprite = ss;
 

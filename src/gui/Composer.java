@@ -1,7 +1,6 @@
 package gui;
 
 import composition.BrushType;
-import composition.CompType;
 import composition.Composition;
 
 import javax.imageio.ImageIO;
@@ -163,8 +162,27 @@ public class Composer extends JComponent {
                             drawY,
                             P_SCALE, P_SCALE);
                 }
+            }
 
+            // draws the power ups
+            for (String coOrd : powerUpSet.keySet()) {
 
+                String trimmedCoOrd = coOrd.replace("[","").replace("]","");
+                String[] split = trimmedCoOrd.split(",");
+                int ax = Integer.parseInt(split[0]);
+                int ay = Integer.parseInt(split[1]);
+
+                int drawX = ax * P_SCALE + halfEmb - OFFSET_HOZ;
+                int drawY = ay * P_SCALE + halfEmb - OFFSET_VERT;
+
+                if (isSpriteMode) {
+                    g.drawImage(subSprites.get(powerUpSet.get(coOrd)), drawX, drawY, P_SCALE, P_SCALE, null);
+                } else {
+                    g.setColor(activeSet.get(coOrd).color);
+                    g.fillRect(drawX,
+                            drawY,
+                            P_SCALE, P_SCALE);
+                }
             }
 
             // drawing the player

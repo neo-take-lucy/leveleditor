@@ -61,6 +61,7 @@ public class Composition {
     public void initLayers() {
         terrainLayer = new BrushType[width][height];
         activeSet = new Hashtable<>();
+        powerUpSet = new Hashtable<>();
 
         isOpen = false;
 
@@ -118,11 +119,26 @@ public class Composition {
             inBounds = true;
         }
 
+        String stringCoOrd;
+
         if(isOpen && inBounds) {
             switch(layer) {
                 case ACTIVE:
-                    String stringCoOrd = String.format("[%d,%d]", x, y);
+                    stringCoOrd = String.format("[%d,%d]", x, y);
                     if (!activeSet.containsKey(stringCoOrd)) activeSet.put(stringCoOrd, value);
+                    break;
+                case POWER_UP:
+                    stringCoOrd = String.format("[%d,%d]", x, y);
+
+                    if (value == BrushType.DELETE_POW) {
+                        powerUpSet.remove(stringCoOrd);
+                        break;
+                    }
+
+                    if (!powerUpSet.containsKey(stringCoOrd)) {
+                        powerUpSet.put(stringCoOrd, value);
+                    }
+
                     break;
                 case TERRAIN:
                     terrainLayer[x][y] = value;
@@ -149,11 +165,16 @@ public class Composition {
             return BrushType.NULL;
         }
 
+        String stringCoOrd;
+
         if(!isOpen) {
             switch(layer) {
                 case ACTIVE:
-                    String stringCoOrd = String.format("[%d,%d]", x, y);
+                    stringCoOrd = String.format("[%d,%d]", x, y);
                     return activeSet.get(stringCoOrd);
+                case POWER_UP:
+                    stringCoOrd = String.format("[%d,%d]", x, y);
+                    return powerUpSet.get(stringCoOrd);
                 case TERRAIN:
                     return terrainLayer[x][y];
             }

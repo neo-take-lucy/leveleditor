@@ -1,20 +1,12 @@
 package command;
 
 import composition.BrushType;
-import composition.CompType;
 import composition.Composition;
-import composition.Layer;
-
-import java.util.Hashtable;
 
 public class DeleteCommand extends Command {
-    private int x;
-    private int y;
 
     private String stringCoOrds;
     private BrushType previousValue; //All paints/colours/enemies are model as enums
-
-    Hashtable<String, CompType> entities;
 
     /**
      * Delete entity at specified location

@@ -17,19 +17,34 @@ import java.awt.*;
                 brushSettings.put("b z", "(fireSpirit)");
                 brushSettings.put("b l", "(levelTrigger)");
 */
+
+/**
+ * BrushType contains all the entities that can be placed with the -place command in the
+ * Editor. If you wish to add another type, add it to this list, and fill out the requiried
+ * arguments of the Enum. The color isn't particularly important. Use a temporary SubSpr value
+ * if you wish to just test functionality.
+ *
+ * If you wish to add a button that corresponds, you need to go to the ToolBox.java class and
+ * add it in the Enum there.
+ */
 public enum BrushType {
 
-    PLAYER(Layer.ACTIVE, "(player)", "b a", SubSpr.PLAYER, Color.yellow),
+    PLAYER(Layer.ACTIVE, "", "", SubSpr.PLAYER, Color.yellow),
 
+    ERASER(Layer.TERRAIN, "", "b n", SubSpr.ERASE, Color.cyan),
     NULL(Layer.TERRAIN, "(null)", "b n", SubSpr.NULL, Color.PINK),
-    DELETE(Layer.ACTIVE, "(delete)", "del", SubSpr.DELETE, Color.PINK),
     FLOOR(Layer.TERRAIN, "(floor)", "b f", SubSpr.FLOOR, Color.BLUE),
     PLATFORM(Layer.TERRAIN, "(platform)", "b p", SubSpr.PLATFORM, Color.cyan),
     SPIKES(Layer.TERRAIN, "(spikes)", "b v", SubSpr.SPIKES, Color.white),
     ROCKS(Layer.TERRAIN, "(rocks)", "b r", SubSpr.ROCK, Color.red),
-    WOLF(Layer.ACTIVE, "(wolf)", "b w", SubSpr.WOLF, Color.darkGray),
+
+    DELETE(Layer.ACTIVE, "(delete)", "del", SubSpr.DELETE, Color.PINK),
     SKELETON(Layer.ACTIVE, "(skeleton)", "b s", SubSpr.SKELETON, Color.white),
-    FIRE_SPIRIT(Layer.ACTIVE, "(fireSpirit)", "b z", SubSpr.ARROW_DOWN, Color.BLUE);
+    WOLF(Layer.ACTIVE, "(wolf)", "b w", SubSpr.WOLF, Color.darkGray),
+    FIRE_SPIRIT(Layer.ACTIVE, "(fireSpirit)", "b z", SubSpr.ARROW_DOWN, Color.BLUE),
+
+    DELETE_POW(Layer.POWER_UP, "(delPow)", "b pdel", SubSpr.DELETE, Color.PINK),
+    POWER_UP_1(Layer.POWER_UP, "(pow1)", "b p1", SubSpr.ARROW_LEFT, Color.red);
 
     public Layer layer;
     public String type;

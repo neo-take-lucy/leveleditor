@@ -1,9 +1,7 @@
 package command;
 
 import composition.BrushType;
-import composition.CompType;
 import composition.Composition;
-import composition.Layer;
 
 public class PlaceCommand extends Command {
 
