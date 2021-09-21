@@ -1,12 +1,33 @@
 package files;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class FileManager {
 
     private static final String root = "source/core/assets/configs/rags/";
     private static final String fileType = ".rag";
+
+    private static final String[] rawWorlds = {
+            "earth_1",
+            "earth_2",
+            "earth_3",
+            "earth_4",
+            "asgard_1",
+            "asgard_2",
+            "hel_1",
+            "hel_2",
+            "jotunheimr_1",
+            "jotunheimr_2"
+    };
+
+    private static final String[] worlds = {
+            "earth",
+            "asgard",
+            "hel",
+            "jotunheimr"
+    };
 
     private static LinkedList<String> validRags;
 
@@ -53,6 +74,16 @@ public class FileManager {
         return false;
     }
 
-
+    /**
+     * Returns a list of the world types, in their raw format, for now...
+     * Maybe will be expanded to not be the raw numbers,
+     * and add some variance to the game over time. Doing so requires some time
+     * to figure a bunch of stuff out, though.
+     * @return LinkedList<String></String> of "raw" world names
+     */
+    public static LinkedList<String> getRawWorlds() {
+        LinkedList<String> worldList = new LinkedList<>(Arrays.asList(rawWorlds));
+        return worldList;
+    }
 
 }

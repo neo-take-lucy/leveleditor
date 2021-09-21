@@ -201,7 +201,9 @@ public class Composer extends JComponent {
                         P_SCALE, P_SCALE);
             }
 
-
+            // draws some text for the world type
+            g.setColor(Color.BLACK);
+            g.drawString("World: " + painting.getWorld(), 30, 30);
 
         }
     }

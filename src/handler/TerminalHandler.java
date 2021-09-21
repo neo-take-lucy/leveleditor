@@ -71,17 +71,13 @@ public class TerminalHandler {
         validCommands.put("new", 3);        //new (name) [width/height]
         validCommands.put("save", 2);       //save filename     REM: more args?
         validCommands.put("load", 2);       //load filename
+        validCommands.put("world", 2);      //world raw_world
 
         validCommands.put("clear", 1);      //clear
 
         validCommands.put("@player", 3);    //@player [command] [command argument]
 
         validCommands.put("toggleterm", 1); // terminal
-
-        //TODO: save filename : with restrictions, saves to working dir of ragnarok racer
-        //TODO: load filename : loads file from filename
-        //TODO: new : with parameters -> make new file return false if
-        //TODO: getdir : expose the names of the files
 
     }
 
@@ -264,6 +260,10 @@ public class TerminalHandler {
         // toggles termianl display on/off
         else if (split[0].equals("toggleterm")) {
             terminalTo.toggleTerminal();
+        }
+
+        else if (split[0].equals("world")) {
+            drawTo.setWorldType(split[1]);
         }
 
         graphicTo.requestRedraw();

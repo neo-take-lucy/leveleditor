@@ -32,6 +32,7 @@ public class Saver {
             String title = toSave.getTitle();
             int width = toSave.getWidth();
             int height = toSave.getHeight();
+            String world = toSave.getWorld();
 
             // gets the playerX and Y
             int playerX = toSave.getPlayer()[0];
@@ -47,7 +48,7 @@ public class Saver {
 
             // each of these is a call to a static funtion in the class that
             // returns a String
-            saveFile.append(makeConfig(title, width, height));
+            saveFile.append(makeConfig(title, width, height, world));
             saveFile.append(makeTerrain(terrainLayer));
             saveFile.append(atPlayer(playerX, playerY));
             saveFile.append(listActiveEntities(activeLayer, width, height));
@@ -73,15 +74,17 @@ public class Saver {
      * @param title title of rag
      * @param width width of rag
      * @param height height of rag
+     * @param world world type of the rag
      * @return String of "_" arguments
      */
-    private static String makeConfig(String title, int width, int height) {
+    private static String makeConfig(String title, int width, int height, String world) {
 
         String appendTitle = String.format("$_title %s\n", title);
         String appendWidth = String.format("$_width %d\n", width);
         String appendHeight = String.format("$_height %d\n", height);
+        String appendWorld = String.format("$_world %s\n", world);
 
-        return appendTitle + appendWidth + appendHeight + "\n";
+        return appendTitle + appendWidth + appendHeight + appendWorld + "\n";
 
     }
 

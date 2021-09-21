@@ -218,6 +218,11 @@ public class ToolBox extends JPanel {
                     case ">toggleterm":
                         handler.parseString("toggleterm");
                         break;
+                    case ">world":
+                        String world = getWorldDialog();
+                        if (world.equals("")) break;
+                        handler.parseString("world " + world);
+                        break;
                 }
             }
         };
@@ -411,6 +416,24 @@ public class ToolBox extends JPanel {
 
     }
 
+    private String getWorldDialog() {
+
+        int x = SubSpr.RESET_ZOOM.x; // change dis
+        int y = SubSpr.RESET_ZOOM.y;
+
+        Image sprite = spriteSheet.getSubimage(x, y, 8, 8)
+                .getScaledInstance((int) (BUTTON_SIZE), (int) (BUTTON_SIZE), Image.SCALE_FAST);
+
+        Icon icon = new ImageIcon(sprite);
+        Object[] worlds = FileManager.getRawWorlds().toArray();
+        String world = (String) JOptionPane.showInputDialog(this,
+                "Select World Type", "Select World Type",
+                JOptionPane.PLAIN_MESSAGE, icon, worlds, "");
+
+        return world;
+
+    }
+
     private String getSaveDialog() {
 
         int x = SubSpr.SAVE.x;
@@ -504,7 +527,8 @@ enum ConfigButtons {
     LOAD(">load", SubSpr.LOAD),
     TOGGLE_TERM(">toggleterm", SubSpr.TOGGLE_TERM),
     UNDO(">undo", SubSpr.UNDO),
-    REDO(">redo", SubSpr.REDO);
+    REDO(">redo", SubSpr.REDO),
+    CHANGE_WORLD(">world", SubSpr.RESET_ZOOM);
 
     private JButton butt;
     private String setting;

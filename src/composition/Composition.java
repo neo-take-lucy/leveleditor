@@ -18,6 +18,8 @@ public class Composition {
     private int width;
     private int height;
 
+    private String worldType;
+
     private int[] playerLocation;
 
     private boolean isOpen;
@@ -43,6 +45,8 @@ public class Composition {
         this.height = initHeight;
 
         this.playerLocation = new int[]{2, height - 2};
+
+        this.worldType = "earth_1";
 
         initLayers();
 
@@ -254,5 +258,13 @@ public class Composition {
 
     public boolean isOpen() {
         return isOpen;
+    }
+
+    public void setWorldType(String world) {
+        this.worldType = world;
+    }
+
+    public String getWorld() {
+        return worldType;
     }
 }
